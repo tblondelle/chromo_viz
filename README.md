@@ -1,6 +1,6 @@
 # Visualisation of chromosomes
 
-Display chromosomes in a block way from simple user input.
+Display chromosomes in a block way from a simple CSV file.
 
 From
 ```csv
@@ -28,15 +28,17 @@ uv add git+https://github.com/tblondelle/chromo_viz.git
 
 
 1. Import your CSV in `input` folder.
-2. Run the following command.
+2. Run the following:
 
 ```shell
-uv run chromo_viz input/data.csv
+uv run chromo_viz input/sample_data.csv
 ```
 
-3. Learn how to adjust the figure :
+3. Learn how to adjust the figure:
 
 ```shell
+$ uv run chromo_viz -h
+
 usage: chromo_viz [-h] [--chromo-gap CHROMO_GAP] [--block-gap BLOCK_GAP] [--height HEIGHT] [--export {png,svg}] csv_file
 
 Generate a figure of chromosomes from a CSV file.
@@ -58,6 +60,5 @@ options:
 
 ```shell
 # For instance
-uv run chromo_viz input/data.csv --chromo-gap 2 --height 2 --export svg
+uv run chromo_viz input/sample_data.csv --chromo-gap 2 --height 2 --export svg
 ```
-

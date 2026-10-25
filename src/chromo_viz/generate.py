@@ -36,6 +36,13 @@ def prepare_data(chromos_file: str) -> Dict :
     return new_dict
 
 
+def get_stats(chromos_file):
+    chromos = prepare_data(chromos_file)
+    for chromo_id, value in chromos.items():
+        total_size = sum(block[0] for block in value)
+        print(f"The size of the chromosome {chromo_id} is {total_size}.")
+
+
 def print_chromos(
     chromos_file: str,
     chromo_gap: int = 10,
@@ -95,3 +102,5 @@ def print_chromos(
         fig.savefig(f"output/{base_name}.svg", format="svg", bbox_inches="tight")
     else:
         raise Exception("The 'export' argument should either be 'png' or 'svg'.")
+
+    get_stats(chromos_file)
