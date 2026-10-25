@@ -12,25 +12,34 @@
 
     <div class="header-actions">
 
-    <input id="csv-file" type="file" accept=".csv,text/csv" hidden>
 
-    <button id="load-csv" class="round-button" type="button" aria-label="Charger un fichier CSV"
-      title="Charger un fichier CSV">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
-        <path
-          d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
-      </svg>
-    </button>
+      <button id="export-csv" class="round-button" type="button" aria-label="Télécharger le CSV"
+        title="Télécharger le CSV">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
+          <path
+            d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+        </svg>Télécharger le CSV
+      </button>
 
-    <button id="export-svg" class="round-button" type="button" title="Sauvegarder en SVG">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-        viewBox="0 -960 960 960" width="24px" fill="white">
-        <path
-          d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
-      </svg>
-    </button>
 
-</div>
+      <input id="csv-file" type="file" accept=".csv,text/csv" hidden>
+
+      <button id="load-csv" class="round-button" type="button" aria-label="Charger un fichier CSV"
+        title="Charger un fichier CSV">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
+          <path
+            d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
+        </svg>Charger un fichier CSV
+      </button>
+
+      <button id="export-svg" class="round-button" type="button" title="Sauvegarder en SVG">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
+          <path
+            d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+        </svg>Sauvegarder en SVG
+      </button>
+
+    </div>
   </header>
 
   <label>
@@ -125,6 +134,16 @@
 
 
     function loadCsvText(text) {
+
+      const header = text.split(/\r?\n/).find(line => line.trim() !== "") ?? "";
+
+      if (header.includes("\t")) {
+        throw new Error(
+          "Le fichier data.csv est séparé par des tabulations. " +
+          "Le séparateur attendu est le point-virgule (;)."
+        );
+      }
+
       const data = d3.dsvFormat(";").parse(text, d => ({
         chromosome: Number(d.chromosome_number),
         size: Number(d.size),
@@ -137,6 +156,7 @@
       draw();
     }
 
+
     fileInput.addEventListener("change", async event => {
       const file = event.target.files[0];
       if (!file) return;
@@ -145,7 +165,7 @@
         loadCsvText(await file.text());
       } catch (error) {
         console.error("Impossible de lire le CSV :", error);
-        alert("Le fichier CSV n’a pas pu être lu.");
+        alert("Le fichier CSV n’a pas pu être lu. \n" + error);
       }
     });
 
@@ -175,6 +195,37 @@
         alert("Le fichier data.csv par défaut n’a pas pu être chargé.");
       });
 
+    document.querySelector("#export-csv").addEventListener("click", () => {
+      if (groups.length === 0) {
+        alert("Aucune donnée à exporter. Charge d’abord un fichier CSV.");
+        return;
+      }
+
+      const rows = [["chromosome_nb", "size", "color"]];
+
+      groups.forEach(([chromosome, blocks]) => {
+        blocks.forEach(block => {
+          rows.push([chromosome, block.size, block.color]);
+        });
+      });
+
+      const csv = rows
+        .map(row => row.map(value => String(value ?? ""))
+          .join(";"))
+        .join("\r\n");
+
+      const blob = new Blob(["\uFEFF", csv], {
+        type: "text/csv;charset=utf-8"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "groups.csv";
+      link.click();
+
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
 
     document.querySelector("#export-svg").addEventListener("click", () => {
       const svg = document.querySelector("#chart svg");
@@ -197,6 +248,8 @@
 
       URL.revokeObjectURL(url);
     });
+
+
 
   </script>
   <script>

@@ -33,21 +33,28 @@ header p {
 }
 
 .round-button {
-  width: 42px;
-  height: 42px;
   border: none;
-  border-radius: 50%;
-  background: #333;
-  color: white;
-  font-size: 1.8rem;
+  border-radius: 2%;
+  background: #d8d8d8;
+  color: rgb(0, 0, 0);
+  font-size: 0.7rem;
+  /* text-align: center; */
+  /* display: flex; */
+  display: inline-flex;
+  align-items: center;     /* centrage vertical */
+  justify-content: center; /* centrage horizontal */
+  gap: 6px;                /* espace entre l’icône et le texte */
+  justify-content: center;
   cursor: pointer;
+  margin: 2px;
+  padding-right: 8px
 }
 
 .round-button:hover {
   background: #555;
+  color: rgb(241, 241, 241);
 }
 
 .round-button span {
   display: block;
-  transform: translateY(-3px);
 }
