@@ -1,7 +1,7 @@
 [project]
 name = "chromo_viz"
-version = "0.1.0"
-description = "Display chromosoms in a block way from simple user input."
+version = "0.1.1"
+description = "Display chromosomes in a block way from simple user input."
 readme = "README.md"
 authors = [
     { name = "Thomas", email = "thomas.blondelle@gmail.com" }

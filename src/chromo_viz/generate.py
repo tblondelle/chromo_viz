@@ -1,10 +1,11 @@
 """
-Generate a picture of chromosoms.
+Generate a picture of chromosomes.
 """
 
-from typing import List, Dict
-import matplotlib.pyplot as plt
+from typing import Dict
+
 import csv
+import matplotlib.pyplot as plt
 
 
 def prepare_data(chromos_file: str) -> Dict :
@@ -36,19 +37,19 @@ def prepare_data(chromos_file: str) -> Dict :
 
 
 def print_chromos(
-    chromos_file,
-    chromo_gap: int = 20,
+    chromos_file: str,
+    chromo_gap: int = 10,
     block_gap: int = 0,
     height: int = 10,
-    export = "png",
+    export: str = "png",
 ) -> None:
     """
     Generate a block representation of chromosome sequence.
 
     Args:
-        chromos: A list of each block. One block is a tuple : chromosome_number,
-          size, block color. Eg: (0, 23, "#DB8D34C9").
-        chromo_gap: The size of the (vertical) gap between chromosoms.
+        chromos_file: A CSV file listing each block. One block is a tuple : chromosome_number,
+          size, block color, like "0 ; 23 ; #DB8D34C9".
+        chromo_gap: The size of the (vertical) gap between chromosomes.
         block_gap: The size of the (horizontal) gap beween blocks.
         height: The (vertical) size of the block.
         export: The format in which the figure is saved. Only "png" and "svg" are allowed.
@@ -86,9 +87,11 @@ def print_chromos(
     ax.set_xticks([])
     ax.set_yticks([])
     ax.invert_yaxis()
+
+    base_name = chromos_file.split("/")[-1].split(".")[0]
     if export == "png":
-        plt.savefig("graphe.png", dpi=150, bbox_inches="tight")
+        plt.savefig(f"output/{base_name}.png", dpi=150, bbox_inches="tight")
     elif export == "svg":
-        fig.savefig("graphe.svg", format="svg", bbox_inches="tight")
+        fig.savefig(f"output/{base_name}.svg", format="svg", bbox_inches="tight")
     else:
         raise Exception("The 'export' argument should either be 'png' or 'svg'.")
