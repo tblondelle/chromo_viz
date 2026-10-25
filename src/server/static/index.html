@@ -8,10 +8,16 @@
 <body>
 
   <header class="page-header">
-    <h1>Chromo Viz</h1>
+
+    <div class="header-base">
+      <a href="https://tblondelle.github.io/" aria-label="Retour à l’accueil">
+        <img src="/favicon.PNG" alt="Accueil" class="home-button">
+      </a>
+
+      <h1>Chromo Viz</h1>
+    </div>
 
     <div class="header-actions">
-
 
       <button id="export-csv" class="round-button" type="button" aria-label="Télécharger le CSV"
         title="Télécharger le CSV">
@@ -41,33 +47,34 @@
 
     </div>
   </header>
+  <div class="settings">
+    <label>
+      Espace entre les blocs :
+      <input id="gap" type="range" min="0" max="5" value="1" step="0.05">
+      <span id="gap-value">1</span>
+    </label>
 
-  <label>
-    Espace entre les blocs :
-    <input id="gap" type="range" min="0" max="5" value="1" step="0.05">
-    <span id="gap-value">1</span>
-  </label>
+    <br>
 
-  <br>
+    <label>
+      Hauteur des barres :
+      <input id="bar-height" type="range" min="5" max="40" value="14" step="0.25">
+      <span id="height-value">14</span>
+    </label>
 
-  <label>
-    Hauteur des barres :
-    <input id="bar-height" type="range" min="5" max="40" value="14" step="0.25">
-    <span id="height-value">14</span>
-  </label>
+    <br>
 
-  <br>
+    <label>
+      Espace entre les lignes :
+      <input id="row-gap" type="range" min="0" max="100" value="14" step="0.5">
+      <span id="row-gap-value">14</span>
+    </label>
+    <br>
+  </div>
+  <div class="content">
+    <div id="chart"></div>
+  </div>
 
-  <label>
-    Espace entre les lignes :
-    <input id="row-gap" type="range" min="0" max="100" value="14" step="0.5">
-    <span id="row-gap-value">14</span>
-  </label>
-  <br>
-
-
-
-  <div id="chart" class="warning"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script>
