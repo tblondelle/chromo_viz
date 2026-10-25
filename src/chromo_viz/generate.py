@@ -4,12 +4,25 @@ Generate a picture of chromosoms.
 
 from typing import List, Dict
 import matplotlib.pyplot as plt
+import csv
 
 
-def prepare_data(chromosome_data: List[List]) -> Dict :
+def prepare_data(chromos_file: str) -> Dict :
     """
-    Transform CSV-like user-input into usable Python data.
+    Transform CSV user-input into usable Python data.
     """
+
+    chromosome_data = []
+
+    with open(chromos_file, mode='r', encoding='utf-8') as file:
+        reader = csv.reader(file, delimiter=";")
+
+        # Ignore first line.
+        next(reader)
+
+        for row in reader:
+            new_row = (int(row[0]), int(row[1]), row[2])
+            chromosome_data.append(new_row)
 
     chromosome_data.sort(key=lambda x: x[0])
 
@@ -23,7 +36,7 @@ def prepare_data(chromosome_data: List[List]) -> Dict :
 
 
 def print_chromos(
-    chromos,
+    chromos_file,
     chromo_gap: int = 20,
     block_gap: int = 0,
     height: int = 10,
@@ -41,7 +54,7 @@ def print_chromos(
         export: The format in which the figure is saved. Only "png" and "svg" are allowed.
     """
 
-    chromos = prepare_data(chromos)
+    chromos = prepare_data(chromos_file)
 
     fig, ax = plt.subplots()
     ax.set_aspect("equal", adjustable="box")
