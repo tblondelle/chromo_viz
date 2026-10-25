@@ -5,6 +5,7 @@ Generate a picture of chromosomes.
 from typing import Dict
 
 import csv
+from pathlib import Path
 import matplotlib.pyplot as plt
 
 
@@ -95,12 +96,20 @@ def print_chromos(
     ax.set_yticks([])
     ax.invert_yaxis()
 
-    base_name = chromos_file.split("/")[-1].split(".")[0]
-    if export == "png":
-        plt.savefig(f"output/{base_name}.png", dpi=150, bbox_inches="tight")
-    elif export == "svg":
-        fig.savefig(f"output/{base_name}.svg", format="svg", bbox_inches="tight")
-    else:
-        raise Exception("The 'export' argument should either be 'png' or 'svg'.")
+    if export not in {"png", "svg"}:
+        raise ValueError("export doit être 'png' ou 'svg'.")
+
+    base_name = Path(chromos_file).stem
+    output_dir = Path("output")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    filename = output_dir / f"{base_name}.{export}"
+
+    fig.savefig(
+        filename,
+        format=export,
+        bbox_inches="tight",
+        **({"dpi": 150} if export == "png" else {}),
+    )
 
     get_stats(chromos_file)
