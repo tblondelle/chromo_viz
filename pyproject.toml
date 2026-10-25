@@ -1,5 +1,5 @@
 [project]
-name = "chromoviz"
+name = "chromo_viz"
 version = "0.1.0"
 description = "Display chromosoms in a block way from simple user input."
 readme = "README.md"
@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-chromoviz = "chromoviz:main"
+chromoviz = "chromo_viz:main"
 
 [build-system]
 requires = ["uv_build>=0.13.1,<0.14.0"]

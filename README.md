@@ -19,16 +19,17 @@ To
 
 From a shell:
 ```bash
-uv add git+https://github.com/tblondelle/chromoviz.git
+uv init
+uv add git+https://github.com/tblondelle/chromo_viz.git
 ```
 
 ## Usage
 
 
-1. Modify the data in `src/chromoviz/__init__.py`
+1. Modify the data in `src/chromo_viz/__init__.py`
 2. Adjust the parameter in the same file.
 3. Run the following command.
 
 ```python
-uv run chromoviz
+uv run chromo_viz
 ```
