@@ -134,6 +134,10 @@ header p {
   flex-direction: column;
 }
 
+.chromosome-label {
+  font-size: 0.5em;
+}
+
 
 #right-menu {
   background-color: beige;
