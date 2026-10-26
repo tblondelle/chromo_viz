@@ -42,9 +42,14 @@
   <div class="settings">
 
     <div id="right-menu" hidden>
-      <div class="right-menu-choice" id="close-menu">Close</div>
-      <div class="right-menu-choice" id="edit-color">Edit color</div>
       <div class="right-menu-choice" id="edit-size">Edit value</div>
+      <div class="right-menu-choice" id="edit-color">Edit color</div>
+      <div class="right-menu-choice" id="remove-seq">Remove sequence</div>
+      <div class="right-menu-choice" id="add-before">Add sequence before</div>
+      <div class="right-menu-choice" id="add-after">Add sequence after</div>
+      <div class="right-menu-choice" id="add-before-chr">Add chromosome before</div>
+      <div class="right-menu-choice" id="add-after-chr">Add chromosome after</div>
+      <div class="right-menu-choice" id="remove-chr">Remove chromosome</div>
     </div>
 
     <input id="color-picker" type="color" hidden>
@@ -54,22 +59,21 @@
     <div class="real-settings">
 
       <label class="setting">
-        <h1>Chromosome interspace</h1>
+        <h1>Vertical space</h1>
         <input id="row-gap" type="range" min="0" max="5" value="2" step="0.05">
-        <div><span id="row-gap-value">14</span>
-          <span>chromosomes</span>
+        <div><span id="row-gap-value">__</span>
+          <span>eq.chromosomes</span>
         </div>
       </label>
       <br>
 
 
 
-
       <label class="setting">
-        <h1>Bar height</h1>
+        <h1>Chromosome height</h1>
         <input id="bar-height" type="range" min="1" max="40" value="14">
         <div><span id="height-value">14</span>
-          <span></span>
+          <span>ua</span>
         </div>
       </label>
 
@@ -77,9 +81,9 @@
 
       <label class="setting">
         <h1>Horizontal gap</h1>
-        <input id="gap" type="range" min="0" max="5" value="1" step="0.05">
+        <input id="gap" type="range" min="0" max="100" value="1" step="0.05">
         <div><span id="gap-value">1</span>
-          <span>bp</span>
+          <span>eq.bp</span>
         </div>
       </label>
 
@@ -96,10 +100,13 @@
 
     const width = 500;
     const margin = { top: 10, right: 10, bottom: 10, left: 10 };
+    const labelWidth = 50;
 
     let groups = [];
     let data = [];
     let selectedBlock = null;
+    let nextBlockId = 0
+    let x = null;
 
     const rightMenu = document.querySelector("#right-menu");
     const colorPicker = document.querySelector("#color-picker");
@@ -133,6 +140,15 @@
       // Calcule x et y directement dans data.
       const offsetByChromosome = new Map();
 
+      const chromosomeTotals = chromosomes.map(chromosome => ({
+        chromosome,
+        total: d3.sum(
+          data.filter(d => d.chromosome === chromosome),
+          d => d.size
+        ),
+        row: rowByChromosome.get(chromosome)
+      }));
+
       data.forEach(d => {
         const row = rowByChromosome.get(d.chromosome);
         const offset = offsetByChromosome.get(d.chromosome) ?? 0;
@@ -152,9 +168,9 @@
         total => total - gap
       ) ?? 0;
 
-      const x = d3.scaleLinear()
+      x = d3.scaleLinear()
         .domain([0, maxTotal || 1])
-        .range([0, width - margin.left - margin.right]);
+        .range([0, width - margin.left - margin.right - labelWidth]);
 
       const height = margin.top + margin.bottom
         + chromosomes.length * (barHeight + rowGapBp) - rowGapBp;
@@ -167,6 +183,17 @@
         .style("max-width", "100%")
         .style("height", "auto");
 
+
+      svg.selectAll("text.chromosome-label")
+        .data(chromosomeTotals, d => d.chromosome)
+        .join("text")
+        .attr("class", "chromosome-label")
+        .attr("x", width - 3*margin.right)
+        .attr("y", d =>
+          margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
+        )
+        .attr("dy", "0.35em")
+        .text(d => `${d.total}`);
 
       svg.selectAll("rect.block")
         .data(data, d => d.id)
@@ -219,7 +246,6 @@
         );
     }
 
-
     function drawValue() {
 
       if (data.length === 0) return;
@@ -244,6 +270,15 @@
       // Calcule x et y directement dans data.
       const offsetByChromosome = new Map();
 
+      const chromosomeTotals = chromosomes.map(chromosome => ({
+        chromosome,
+        total: d3.sum(
+          data.filter(d => d.chromosome === chromosome),
+          d => d.size
+        ),
+        row: rowByChromosome.get(chromosome)
+      }));
+
       data.forEach(d => {
         const row = rowByChromosome.get(d.chromosome);
         const offset = offsetByChromosome.get(d.chromosome) ?? 0;
@@ -265,7 +300,7 @@
 
       const x = d3.scaleLinear()
         .domain([0, maxTotal || 1])
-        .range([0, width - margin.left - margin.right]);
+        .range([0, width - margin.left - margin.right - labelWidth]);
 
       const height = margin.top + margin.bottom
         + chromosomes.length * (barHeight + rowGapBp) - rowGapBp;
@@ -278,6 +313,16 @@
         .style("max-width", "100%")
         .style("height", "auto");
 
+      svg.selectAll("text.chromosome-label")
+        .data(chromosomeTotals, d => d.chromosome)
+        .join("text")
+        .attr("class", "chromosome-label")
+        .attr("x", width - 3*margin.right)
+        .attr("y", d =>
+          margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
+        )
+        .attr("dy", "0.35em")
+        .text(d => `${d.total}`);
 
       svg.selectAll("rect.block")
         .data(data, d => d.id)
@@ -323,13 +368,37 @@
         );
     }
 
-
     function drawColors() {
       d3.select("#chart")
         .selectAll("rect.block")
         .data(data, d => d.id)
         .attr("fill", d => d.color);
     }
+
+
+    function editBlock() {
+
+      const barHeight = +heightInput.value;
+
+      const svg = d3.select("#chart")
+        .selectAll("svg")
+
+      svg.selectAll("rect.block")
+        .data(data, d => d.id)
+        .join(
+          update => update
+            .transition()
+            .duration(25)
+            .attr("x", d => margin.left + x(d.x))
+            .attr("y", d => d.y)
+            .attr("height", barHeight)
+            .attr("width", d => x(d.size))
+            .attr("fill", d => d.color),
+        );
+
+      draw();
+    }
+
 
 
     function loadCsvText(text) {
@@ -343,7 +412,7 @@
         );
       }
 
-      let nextBlockId = 0;
+      nextBlockId = 0;
       data = d3.dsvFormat(";").parse(text, d => ({
         chromosome: Number(d.chromosome_number),
         size: Number(d.size),
@@ -352,7 +421,7 @@
       }));
 
 
-      const svg = d3.select("#chart")
+      d3.select("#chart")
         .selectAll("svg")
         .selectAll("*").remove()
 
@@ -458,10 +527,6 @@
       }
     });
 
-    document.querySelector("#close-menu").addEventListener("click", () => {
-      rightMenu.hidden = true;
-    });
-
     document.querySelector("#edit-color").addEventListener("click", () => {
       if (!selectedBlock) return;
 
@@ -489,6 +554,160 @@
       drawValue();
       rightMenu.hidden = true;
     });
+
+    document.querySelector("#remove-seq").addEventListener("click", () => {
+      if (!selectedBlock) return;
+
+      if (data.length === 1) {
+        alert("The graph must contain at least one sequence.");
+        return;
+      }
+
+
+      const index = data.findIndex(d => d.id === selectedBlock.id);
+      if (index === -1) return;
+
+      data.splice(index, 1);
+      selectedBlock = null;
+
+      draw();
+      rightMenu.hidden = true;
+    });
+
+    document.querySelector("#add-before").addEventListener("click", () => {
+      if (!selectedBlock) return;
+
+      const value = prompt("Nouvelle valeur :", selectedBlock.size);
+      if (value === null) return;
+
+      const size = Number(value);
+        if (!Number.isFinite(size) || size <= 0) {
+          alert("Saisis une valeur numérique supérieure à 0.");
+          return;
+        }
+
+        const index = data.findIndex(d => d.id === selectedBlock.id);
+        if (index === -1) return;
+
+        const newBlock = {
+          id: nextBlockId++,
+          chromosome: selectedBlock.chromosome,
+          size,
+          color: selectedBlock.color
+        };
+
+        data.splice(index, 0, newBlock);
+
+        draw();
+      rightMenu.hidden = true;
+    });
+
+    document.querySelector("#add-after").addEventListener("click", () => {
+      if (!selectedBlock) return;
+
+      const value = prompt("Nouvelle valeur :", selectedBlock.size);
+      if (value === null) return;
+
+      const size = Number(value);
+        if (!Number.isFinite(size) || size <= 0) {
+          alert("Saisis une valeur numérique supérieure à 0.");
+          return;
+        }
+
+        const index = data.findIndex(d => d.id === selectedBlock.id);
+        if (index === -1) return;
+
+        const newBlock = {
+          id: nextBlockId++,
+          chromosome: selectedBlock.chromosome,
+          size,
+          color: selectedBlock.color
+        };
+
+        data.splice(index+1, 0, newBlock);
+
+        draw();
+      rightMenu.hidden = true;
+    });
+
+    document.querySelector("#remove-chr").addEventListener("click", () => {
+      if (!selectedBlock) return;
+
+      const chromosome = selectedBlock.chromosome;
+      const remainingBlocks = data.filter(d => d.chromosome !== chromosome);
+
+      if (remainingBlocks.length === 0) {
+        alert("The graph must contain at least one sequence.");
+        return;
+      }
+
+      for (let i = data.length - 1; i >= 0; i--) {
+        if (data[i].chromosome === chromosome) {
+          data.splice(i, 1);
+        }
+      }
+
+      selectedBlock = null;
+      draw();
+      rightMenu.hidden = true;
+    });
+
+    document.querySelector("#add-before-chr").addEventListener("click", () => {
+      if (!selectedBlock) return;
+
+      const sourceChromosome = selectedBlock.chromosome;
+
+      // Décale le chromosome sélectionné et ceux qui le suivent.
+      data.forEach(d => {
+        if (d.chromosome >= sourceChromosome) {
+          d.chromosome += 1;
+        }
+      });
+
+      // La copie prend le numéro libéré : elle apparaît avant l'original.
+      const copies = data
+        .filter(d => d.chromosome === sourceChromosome + 1)
+        .map(d => ({
+          ...d,
+          id: nextBlockId++,
+          chromosome: sourceChromosome
+        }));
+
+      data.push(...copies);
+
+      selectedBlock = null;
+      // editBlock();
+      draw();
+      rightMenu.hidden = true;
+    });
+
+    document.querySelector("#add-after-chr").addEventListener("click", () => {
+     if (!selectedBlock) return;
+
+      const sourceChromosome = selectedBlock.chromosome;
+
+      const copies = data
+        .filter(d => d.chromosome === sourceChromosome)
+        .map(d => ({
+          ...d,
+          id: nextBlockId++,
+          chromosome: sourceChromosome + 1
+        }));
+
+      // Libère le numéro suivant en décalant les chromosomes existants.
+      data.forEach(d => {
+        if (d.chromosome > sourceChromosome) {
+          d.chromosome += 1;
+        }
+      });
+
+      data.push(...copies);
+
+      selectedBlock = null;
+      draw();
+      rightMenu.hidden = true;
+    });
+
 
     colorPicker.addEventListener("input", () => {
       if (!selectedBlock) return;
