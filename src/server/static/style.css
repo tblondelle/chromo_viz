@@ -68,6 +68,20 @@ header p {
   color: rgb(241, 241, 241);
 }
 
+.round-button:hover svg {
+  fill: rgb(241, 241, 241);
+}
+
+.round-button:active {
+  transform: translate(1px, 1px);
+  background: #777777;
+  color: rgb(241, 241, 241);
+}
+
+.round-button:active svg {
+  fill: rgb(241, 241, 241);
+}
+
 .round-button span {
   display: block;
 }

@@ -1,7 +1,9 @@
 <!doctype html>
 
 <head>
+  <title>Chromos Viz</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="favicon2.PNG">
   <meta charset="utf-8">
 </head>
 
@@ -19,37 +21,37 @@
 
     <div class="header-actions">
 
-      <button id="export-csv" class="round-button" type="button" aria-label="Télécharger le CSV"
-        title="Télécharger le CSV">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
+      <button id="export-csv" class="round-button" type="button" aria-label="Download CSV"
+        title="Download CSV">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">
           <path
             d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
-        </svg>Télécharger le CSV
+        </svg>Download CSV
       </button>
 
 
       <input id="csv-file" type="file" accept=".csv,text/csv" hidden>
 
-      <button id="load-csv" class="round-button" type="button" aria-label="Charger un fichier CSV"
-        title="Charger un fichier CSV">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
+      <button id="load-csv" class="round-button" type="button" aria-label="Load CSV"
+        title="Load CSV">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">
           <path
             d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
-        </svg>Charger un fichier CSV
+        </svg>Load CSV
       </button>
 
-      <button id="export-svg" class="round-button" type="button" title="Sauvegarder en SVG">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
+      <button id="export-svg" class="round-button" type="button" title="Export to SVG">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">
           <path
             d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
-        </svg>Sauvegarder en SVG
+        </svg>Export to SVG
       </button>
 
     </div>
   </header>
   <div class="settings">
     <label>
-      Espace entre les blocs :
+      Horizontal gap:
       <input id="gap" type="range" min="0" max="5" value="1" step="0.05">
       <span id="gap-value">1</span>
     </label>
@@ -57,7 +59,7 @@
     <br>
 
     <label>
-      Hauteur des barres :
+      Bar height :
       <input id="bar-height" type="range" min="5" max="40" value="14" step="0.25">
       <span id="height-value">14</span>
     </label>
@@ -65,7 +67,7 @@
     <br>
 
     <label>
-      Espace entre les lignes :
+      Chromosome interspace :
       <input id="row-gap" type="range" min="0" max="100" value="14" step="0.5">
       <span id="row-gap-value">14</span>
     </label>
@@ -132,7 +134,9 @@
             .attr("y", y)
             .attr("width", x(block.size))
             .attr("height", barHeight)
-            .attr("fill", block.color);
+            .attr("fill", block.color)
+            .append("title")
+            .text(`On chromosome ${chromosome}, this block is of size: ${block.size}. `);
 
           offset += block.size + (i < blocks.length - 1 ? gap : 0);
         });
