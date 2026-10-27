@@ -147,15 +147,19 @@ header p {
 }
 
 .right-menu-choice {
-  padding: 3px;
-  padding-left: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
   cursor: pointer;
   border-radius: 5px;
 }
 
 .icon {
-  width: 18px;
-  height: 18px;
+  display: block;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
 }
 
 .right-menu-choice:hover {
