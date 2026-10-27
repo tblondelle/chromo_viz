@@ -13,8 +13,14 @@ header {
 }
 
 header h1,
+header h3,
 header p {
   margin: 0;
+}
+
+header h3 {
+  font-size: 14px;
+  font-weight: normal;
 }
 
 header p {
@@ -23,7 +29,7 @@ header p {
 
 .page-header {
   display: flex;
-  align-items: center;
+  align-items: normal;
   justify-content: space-between;
   padding: 1rem 1.5rem;
 }
@@ -37,7 +43,6 @@ header p {
 
 .settings .title {
   font-size: large;
-
 }
 
 .real-settings {
@@ -69,7 +74,7 @@ header p {
 
 .header-base {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 12px;
 }
 
