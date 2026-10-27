@@ -35,6 +35,10 @@ header p {
   gap: 12px;
 }
 
+.header-base img {
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.589));
+}
+
 .home-button {
   width: 28px;
   height: auto;
