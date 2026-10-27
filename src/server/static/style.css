@@ -153,6 +153,11 @@ header p {
   border-radius: 5px;
 }
 
+.icon {
+  width: 18px;
+  height: 18px;
+}
+
 .right-menu-choice:hover {
   background-color: rgb(216, 216, 193);
 }
