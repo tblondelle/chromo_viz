@@ -147,7 +147,7 @@
           </svg>
           Chromosome height
         </h1>
-        <input id="bar-height" type="range" min="1" max="40" value="14">
+        <input id="bar-height" type="range" min="1" max="40" value="14" step="0.05">
         <div><span id="height-value">14</span>
           <span>ua</span>
         </div>
@@ -182,7 +182,7 @@
 
     const width = 500;
     const margin = { top: 10, right: 10, bottom: 10, left: 10 };
-    const labelWidth = 50;
+    const labelWidth = 30;
 
     let groups = [];
     let data = [];
@@ -270,12 +270,12 @@
       svg.selectAll("text.chromosome-label")
         .data(chromosomeTotals, d => d.chromosome)
         .join("text")
-        .attr("class", "chromosome-label")
-        .attr("x", width - 3 * margin.right)
-        .attr("y", d =>
-          margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
-        )
-        .attr("dy", "0.35em")
+            .attr("class", "chromosome-label")
+            .attr("x", width - labelWidth)
+            .attr("y", d =>
+              margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
+            )
+            .attr("dy", "0.35em")
         .text(d => `${d.total}bp`);
 
       svg.selectAll("rect.block")
@@ -311,6 +311,8 @@
             ),
 
           update => update
+            .transition()
+            .duration(20)
             .attr("x", d => margin.left + x(d.x))
             .attr("y", d => d.y)
             .attr("height", barHeight)
@@ -416,12 +418,12 @@
       svg.selectAll("text.chromosome-label")
         .data(chromosomeTotals, d => d.chromosome)
         .join("text")
-        .attr("class", "chromosome-label")
-        .attr("x", width - 3 * margin.right)
-        .attr("y", d =>
-          margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
-        )
-        .attr("dy", "0.35em")
+            .attr("class", "chromosome-label")
+            .attr("x", width - labelWidth)
+            .attr("y", d =>
+              margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
+            )
+            .attr("dy", "0.35em")
         .text(d => `${d.total}bp`);
 
       svg.selectAll("rect.block")
