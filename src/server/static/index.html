@@ -1,5 +1,7 @@
 <!doctype html>
 
+<html lang="fr">
+
 <head>
   <title>Chromo Viz</title>
   <link rel="stylesheet" href="style.css">
@@ -39,9 +41,15 @@
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#black">
           <path
             d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160v212q-19-8-39.5-10.5t-40.5.5v-169L647-760H200v560h240v80H200Zm0-640v560-560ZM520-40v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T863-260L643-40H520Zm300-263-37-37 37 37ZM580-100h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19ZM240-560h360v-160H240v160Zm240 320h4l116-115v-5q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Z" />
-        </svg>Save as SVG
+        </svg>Export as SVG
       </button>
 
+      <button id="export-ppt" class="round-button" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f">
+          <path
+            d="M9.5,16.5l7-4.5l-7-4.5v9ZM5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H19V5H5V19ZM5,5V19V5Z" />
+        </svg>Export as PPT
+      </button>
     </div>
   </header>
 
@@ -270,12 +278,12 @@
       svg.selectAll("text.chromosome-label")
         .data(chromosomeTotals, d => d.chromosome)
         .join("text")
-            .attr("class", "chromosome-label")
-            .attr("x", width - labelWidth)
-            .attr("y", d =>
-              margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
-            )
-            .attr("dy", "0.35em")
+        .attr("class", "chromosome-label")
+        .attr("x", width - labelWidth)
+        .attr("y", d =>
+          margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
+        )
+        .attr("dy", "0.35em")
         .text(d => `${d.total}bp`);
 
       svg.selectAll("rect.block")
@@ -418,12 +426,12 @@
       svg.selectAll("text.chromosome-label")
         .data(chromosomeTotals, d => d.chromosome)
         .join("text")
-            .attr("class", "chromosome-label")
-            .attr("x", width - labelWidth)
-            .attr("y", d =>
-              margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
-            )
-            .attr("dy", "0.35em")
+        .attr("class", "chromosome-label")
+        .attr("x", width - labelWidth)
+        .attr("y", d =>
+          margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
+        )
+        .attr("dy", "0.35em")
         .text(d => `${d.total}bp`);
 
       svg.selectAll("rect.block")
@@ -625,13 +633,6 @@
             .attr("width", 0)
             .remove()
         );
-    }
-
-    function drawColors() {
-      d3.select("#chart")
-        .selectAll("rect.block")
-        .data(data, d => d.id)
-        .attr("fill", d => d.color);
     }
 
 
@@ -949,9 +950,71 @@
       if (!selectedBlock) return;
 
       selectedBlock.color = colorPicker.value;
-      drawColors();
+      drawCanvas();
     });
 
   </script>
 
+  <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs/dist/pptxgen.bundle.js"></script>
+  <script>
+    document.getElementById("export-ppt").addEventListener("click", async () => {
+      const pptx = new PptxGenJS();
+      const slide = pptx.addSlide();
+
+      const slideWidth = 10;
+      const slideHeight = 5.625;
+
+      const chromosomes = [...new Set(data.map(d => d.chromosome))]
+        .sort(d3.ascending);
+
+      const barHeight = Number(heightInput.value);
+      const rowGapBp = Number(rowGapInput.value) * barHeight;
+
+      const svgHeight =
+        margin.top +
+        margin.bottom +
+        chromosomes.length * (barHeight + rowGapBp) -
+        rowGapBp;
+
+      const svgWidth = margin.left + width + margin.right;
+
+      // Ajuste le graphique à la diapositive sans déformer les formes.
+      const scale = Math.min(slideWidth / svgWidth, slideHeight / svgHeight);
+
+      document.querySelectorAll(".block").forEach(element => {
+        const x = Number(element.getAttribute("x"));
+        const y = Number(element.getAttribute("y"));
+        const w = Number(element.getAttribute("width"));
+        const h = Number(element.getAttribute("height"));
+        const fill = element.getAttribute("fill").slice(1);
+
+        slide.addShape(pptx.ShapeType.rect, {
+          x: x * scale,
+          y: y * scale,
+          w: w * scale,
+          h: h * scale,
+          fill: { color: fill }
+        });
+      });
+
+      document.querySelectorAll(".chromosome-label").forEach(element => {
+        let textboxText = element.textContent;
+        const x = Number(element.getAttribute("x"));
+        const y = Number(element.getAttribute("y"));
+        let textboxOpts = {
+          x: x * scale,
+          y: y * scale - 0.5/2,
+          w: "1",
+          h: "0.5",
+          color: "363636",
+          isTextBox: true,
+        };
+        slide.addText(textboxText, textboxOpts);
+      });
+
+      await pptx.writeFile({ fileName: "ChromoViz.pptx" });
+    });
+  </script>
 </body>
+
+</html>
