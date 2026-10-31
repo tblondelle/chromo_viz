@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 def main() -> None:
-    static_dir = Path(__file__).resolve().parent / "static"
+    static_dir = Path(__file__).resolve().parents[2]
     handler = partial(SimpleHTTPRequestHandler, directory=str(static_dir))
 
     server = ThreadingHTTPServer(("127.0.0.1", 8000), handler)
