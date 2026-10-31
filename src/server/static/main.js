@@ -474,7 +474,7 @@ function loadCsvText(text) {
 
 
 // Initial load
-fetch("data.csv")
+fetch("src/server/static/data.csv")
     .then(response => {
         if (!response.ok) throw new Error(`Erreur HTTP : ${response.status}`);
         return response.text();
