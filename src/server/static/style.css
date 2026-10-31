@@ -96,19 +96,19 @@ header p {
   width: 100%;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .setting {
   padding-bottom: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
   margin-right: 10px;
   margin-top: 15px;
   flex-direction: column;
   justify-content: center;
-  /* centrage horizontal */
   display: flex;
   align-items: center;
-  /* centre verticalement */
-  width: 20%;
   font-size: small;
   border-radius: 4px;
   border: 1px solid #d8d7d7;
