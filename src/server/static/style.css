@@ -29,19 +29,29 @@ header p {
   margin-top: 0.4rem;
 }
 
+.left-side {
+  display: flex;
+  gap: 0; /* aucun espace entre les deux */
+}
+
 .header-base {
   display: flex;
   align-items: baseline;
   gap: 12px;
 }
 
-.header-base img {
-  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.589));
+.home-button {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  width: 30px;
 }
 
-.home-button {
+.home-button img {
+
   width: 28px;
-  height: auto;
+  height: 28px;
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.589));
 }
 
 

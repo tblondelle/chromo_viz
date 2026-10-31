@@ -13,11 +13,15 @@
 <body>
 
   <header class="page-header">
+    <div class="left-side">
+      <div class="home-button">
+        <img src="src/server/static/favicon2.PNG" alt="Chromo Viz Icon">
+      </div>
 
-    <div class="header-base">
-      <img src="src/server/static/favicon2.PNG" alt="Chromo Viz Icon" class="home-button">
-      <h1>Chromo Viz</h1>
-      <h3>Display your chromosome sequences with ease.</h3>
+      <div class="header-base">
+        <h1>Chromo Viz</h1>
+        <h3>Display your chromosome sequences with ease.</h3>
+      </div>
     </div>
 
     <div class="header-actions">
@@ -32,17 +36,25 @@
 
       <button id="export-csv" class="round-button" type="button" aria-label="Download CSV">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black">
-          <path d="M18,21l4-4l-1.4-1.4L19,17.2V13.02H17V17.2l-1.6-1.6L14,17l4,4Zm-4,3V22h8v2H14ZM6,20q-0.82,0-1.41-0.59T4,18V4Q4,3.17 4.59,2.59T6,2h7l6,6v3.02H17V9H12V4H6V18h6v2H6Zm0-2V11.02V9V4V18Z"/></svg>
+          <path
+            d="M18,21l4-4l-1.4-1.4L19,17.2V13.02H17V17.2l-1.6-1.6L14,17l4,4Zm-4,3V22h8v2H14ZM6,20q-0.82,0-1.41-0.59T4,18V4Q4,3.17 4.59,2.59T6,2h7l6,6v3.02H17V9H12V4H6V18h6v2H6Zm0-2V11.02V9V4V18Z" />
+        </svg>
         Save as CSV
       </button>
 
       <button id="export-svg" class="round-button" type="button">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f"><path d="M12,12ZM5.05,22.38l-1.4-1.43L6.6,18H4.35V16H10v5.65H8V19.43L5.05,22.38ZM12,22V20h6V9H13V4H6V14H4V4Q4,3.17 4.59,2.59T6,2h8l6,6V20q0,0.82-0.59,1.41T18,22H12Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f">
+          <path
+            d="M12,12ZM5.05,22.38l-1.4-1.43L6.6,18H4.35V16H10v5.65H8V19.43L5.05,22.38ZM12,22V20h6V9H13V4H6V14H4V4Q4,3.17 4.59,2.59T6,2h8l6,6V20q0,0.82-0.59,1.41T18,22H12Z" />
+        </svg>
         Export as SVG
       </button>
 
       <button id="export-ppt" class="round-button" type="button">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f"><path d="M12,12ZM5.05,22.38l-1.4-1.43L6.6,18H4.35V16H10v5.65H8V19.43L5.05,22.38ZM12,22V20h6V9H13V4H6V14H4V4Q4,3.17 4.59,2.59T6,2h8l6,6V20q0,0.82-0.59,1.41T18,22H12Z"/></svg>Export as PowerPoint
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f">
+          <path
+            d="M12,12ZM5.05,22.38l-1.4-1.43L6.6,18H4.35V16H10v5.65H8V19.43L5.05,22.38ZM12,22V20h6V9H13V4H6V14H4V4Q4,3.17 4.59,2.59T6,2h8l6,6V20q0,0.82-0.59,1.41T18,22H12Z" />
+        </svg>Export as PowerPoint
       </button>
     </div>
   </header>
