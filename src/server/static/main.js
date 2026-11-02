@@ -487,6 +487,17 @@ fetch("src/server/static/data.csv")
 
 
 // Listeners
+const dialog = document.querySelector("#about-dialog");
+
+document.querySelector("#about").addEventListener("click", () => {
+  dialog.showModal();
+});
+
+dialog.querySelector(".close-button").addEventListener("click", () => {
+  dialog.close();
+});
+
+
 document.querySelector("#export-csv").addEventListener("click", () => {
     if (data.length === 0) {
         alert("No data to export. First load a CSV file.");

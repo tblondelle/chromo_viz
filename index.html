@@ -7,7 +7,8 @@
   <link rel="stylesheet" href="src/server/static/style.css">
   <link rel="icon" type="image/x-icon" href="src/server/static/favicon2.PNG">
   <meta charset="utf-8">
-  <meta name="description" content="Chromo Viz, an interactive tool to create graphical display of chromosome sequence.">
+  <meta name="description"
+    content="Chromo Viz, an interactive tool to create graphical display of chromosome sequence.">
   <meta name="keywords" content="Chromo Viz, chromosome, vizualisation, powerpoint">
 </head>
 
@@ -21,7 +22,29 @@
 
       <div class="header-base">
         <h1>Chromo Viz</h1>
-        <h3>Display your chromosome sequences with ease.</h3>
+        <button id="about"">About</button>
+
+        <dialog id="about-dialog" aria-labelledby="dialog-title" closedby="any">
+          <button class="close-button" aria-label="Close">×</button>
+
+          <h2 id="dialog-title">About Chromo Viz</h2>
+          <p>
+            Chromo Viz helps you visualize your chromosome sequences.
+          </p>
+          <p>
+            Version: 1.0.0 (nov. 2026)
+          </p>
+          <p>
+            🤔 Found a bug?
+            <a href="https://github.com/tblondelle/chromo_viz/issues" target="_blank" rel="noopener noreferrer">Open an
+              issue on GitHub</a>
+          </p>
+          <p>
+            🥰 Want to show you support?
+            <a href="https://github.com/tblondelle/chromo_viz" target="_blank" rel="noopener noreferrer">Star the
+              repo</a>
+          </p>
+          </dialog>
       </div>
     </div>
 
@@ -57,6 +80,8 @@
             d="M12,12ZM5.05,22.38l-1.4-1.43L6.6,18H4.35V16H10v5.65H8V19.43L5.05,22.38ZM12,22V20h6V9H13V4H6V14H4V4Q4,3.17 4.59,2.59T6,2h8l6,6V20q0,0.82-0.59,1.41T18,22H12Z" />
         </svg>Export as PowerPoint
       </button>
+
+
     </div>
   </header>
 
