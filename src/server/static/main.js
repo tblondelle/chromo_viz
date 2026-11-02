@@ -525,7 +525,7 @@ document.querySelector("#export-csv").addEventListener("click", () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "groups.csv";
+    link.download = "ChromoViz.csv";
     link.click();
 
     setTimeout(() => URL.revokeObjectURL(url), 1000);
@@ -535,7 +535,7 @@ document.querySelector("#export-svg").addEventListener("click", () => {
     const svg = document.querySelector("#chart svg");
 
     if (!svg) {
-        alert("Aucun graphe à exporter.");
+        alert("No graph to export.");
         return;
     }
 
@@ -547,7 +547,7 @@ document.querySelector("#export-svg").addEventListener("click", () => {
     const url = URL.createObjectURL(blob);
     const lien = document.createElement("a");
     lien.href = url;
-    lien.download = "graphe.svg";
+    lien.download = "ChromoViz.svg";
     lien.click();
 
     URL.revokeObjectURL(url);
@@ -564,8 +564,8 @@ fileInput.addEventListener("change", async event => {
     try {
         loadCsvText(await file.text());
     } catch (error) {
-        console.error("Impossible de lire le CSV :", error);
-        alert("Le fichier CSV n’a pas pu être lu. \n" + error);
+        console.error("Can't read the CSV :", error);
+        alert("The CSV file could not be read. \n" + error);
     }
 });
 
@@ -599,12 +599,12 @@ document.querySelector("#edit-color").addEventListener("click", () => {
 document.querySelector("#edit-size").addEventListener("click", () => {
     if (!selectedBlock) return;
 
-    const value = prompt("Nouvelle valeur :", selectedBlock.size);
+    const value = prompt("New size:", selectedBlock.size);
     if (value === null) return;
 
     const size = Number(value);
     if (!Number.isFinite(size) || size <= 0) {
-        alert("Saisis une valeur numérique supérieure à 0.");
+        alert("Please enter a size greater than 0.");
         return;
     }
 
@@ -635,12 +635,12 @@ document.querySelector("#remove-seq").addEventListener("click", () => {
 document.querySelector("#add-before").addEventListener("click", () => {
     if (!selectedBlock) return;
 
-    const value = prompt("Nouvelle valeur :", selectedBlock.size);
+    const value = prompt("New size:", selectedBlock.size);
     if (value === null) return;
 
     const size = Number(value);
     if (!Number.isFinite(size) || size <= 0) {
-        alert("Saisis une valeur numérique supérieure à 0.");
+        alert("Please enter a size greater than 0.");
         return;
     }
 
@@ -663,12 +663,12 @@ document.querySelector("#add-before").addEventListener("click", () => {
 document.querySelector("#add-after").addEventListener("click", () => {
     if (!selectedBlock) return;
 
-    const value = prompt("Nouvelle valeur :", selectedBlock.size);
+    const value = prompt("New size:", selectedBlock.size);
     if (value === null) return;
 
     const size = Number(value);
     if (!Number.isFinite(size) || size <= 0) {
-        alert("Saisis une valeur numérique supérieure à 0.");
+        alert("Please enter a size greater than 0.");
         return;
     }
 
