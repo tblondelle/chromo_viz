@@ -22,12 +22,28 @@ document.getElementById("export-ppt").addEventListener("click", async () => {
     // Ajuste le graphique à la diapositive sans déformer les formes.
     const scale = Math.min(slideWidth / svgWidth, slideHeight / svgHeight);
 
+    function getHexColor(rect) {
+        const fill = rect.getAttribute("fill");
+        const ctx = document.createElement("canvas").getContext("2d");
+
+        ctx.fillStyle = fill;
+        const normalized = ctx.fillStyle;
+
+        if (normalized.startsWith("#")) return normalized.toUpperCase().slice(1);
+
+        const [r, g, b] = normalized.match(/\d+/g).map(Number);
+        return [r, g, b]
+            .map(n => n.toString(16).padStart(2, "0"))
+            .join("")
+            .toUpperCase();
+    }
+
     document.querySelectorAll(".block").forEach(element => {
         const x = Number(element.getAttribute("x"));
         const y = Number(element.getAttribute("y"));
         const w = Number(element.getAttribute("width"));
         const h = Number(element.getAttribute("height"));
-        const fill = element.getAttribute("fill").slice(1);
+        const fill = getHexColor(element);
 
         slide.addShape(pptx.ShapeType.rect, {
             x: x * scale,
