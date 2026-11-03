@@ -1,6 +1,7 @@
 const width = 500;
 const labelWidth = 20;
 const labelMargin = 10;
+const topMargin = 3;
 
 let groups = [];
 let data = [];
@@ -54,7 +55,7 @@ function draw(withAnimation = true) {
         const offset = offsetByChromosome.get(d.chromosome) ?? 0;
 
         d.x = offset;
-        d.y = row * (barHeight + rowGapBp);
+        d.y = topMargin + row * (barHeight + rowGapBp);
         d.row = row;
 
         offsetByChromosome.set(
@@ -72,7 +73,7 @@ function draw(withAnimation = true) {
         .domain([0, maxTotal || 1])
         .range([0, width - labelWidth - labelMargin]);
 
-    const height = chromosomes.length * (barHeight + rowGapBp) - rowGapBp;
+    const height = topMargin + chromosomes.length * (barHeight + rowGapBp) - rowGapBp;
 
     const svg = d3.select("#chart")
         .selectAll("svg")
@@ -89,7 +90,7 @@ function draw(withAnimation = true) {
         .attr("class", "chromosome-label")
         .attr("x", width - labelWidth)
         .attr("y", d =>
-            d.row * (barHeight + rowGapBp) + barHeight / 2
+            topMargin + d.row * (barHeight + rowGapBp) + barHeight / 2
         )
         .attr("dy", "0.35em")
         .text(d => `${d.total}bp`);
