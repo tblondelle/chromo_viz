@@ -156,8 +156,8 @@ function draw(withAnimation = true) {
                     const previous = sameRow.filter(block => block.x < d.x).at(-1);
                     const next = sameRow.find(block => block.x >= d.x);
 
-                    const previousX = previous ? margin.left + x(previous.x + previous.size) : margin.left;
-                    const nextX = next ? margin.left + x(next.x) : margin.left + x(d.x + d.size);
+                    const previousX = previous ? x(previous.x + previous.size + gap) : 0;
+                    const nextX = next ? x(next.x) : previousX;
 
                     return (previousX + nextX) / 2;
                 })
