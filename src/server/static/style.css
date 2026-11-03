@@ -114,8 +114,6 @@ header p {
   justify-content: center;
   /* centrage horizontal */
   gap: 6px;
-  /* espace entre l’icône et le texte */
-  justify-content: center;
   cursor: pointer;
   margin: 2px;
   padding-right: 8px;
@@ -176,20 +174,13 @@ header p {
 .setting h1 {
   font-size: small;
   align-items: center;
-  /* centre verticalement */
   display: flex;
   padding-right: 4px;
   gap: 5px;
 }
 
 .content {
-  margin: 8px;
-}
-
-#chart {
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
+  margin: 3rem;
 }
 
 .chromosome-label {

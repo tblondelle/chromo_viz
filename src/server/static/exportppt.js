@@ -4,6 +4,7 @@ document.getElementById("export-ppt").addEventListener("click", async () => {
 
     const slideWidth = 10;
     const slideHeight = 5.625;
+    const slideMargin = 0.5;
 
     const chromosomes = [...new Set(data.map(d => d.chromosome))]
         .sort(d3.ascending);
@@ -12,15 +13,12 @@ document.getElementById("export-ppt").addEventListener("click", async () => {
     const rowGapBp = Number(rowGapInput.value) * barHeight;
 
     const svgHeight =
-        margin.top +
-        margin.bottom +
         chromosomes.length * (barHeight + rowGapBp) -
         rowGapBp;
 
-    const svgWidth = margin.left + width + margin.right;
-
     // Ajuste le graphique à la diapositive sans déformer les formes.
-    const scale = Math.min(slideWidth / svgWidth, slideHeight / svgHeight);
+    const scale = Math.min((slideWidth - 2 * slideMargin) / width,
+        (slideHeight - 2 * slideMargin) / svgHeight);
 
     function getHexColor(rect) {
         const fill = rect.getAttribute("fill");
@@ -46,8 +44,8 @@ document.getElementById("export-ppt").addEventListener("click", async () => {
         const fill = getHexColor(element);
 
         slide.addShape(pptx.ShapeType.rect, {
-            x: x * scale,
-            y: y * scale,
+            x: slideMargin + x * scale,
+            y: slideMargin + y * scale,
             w: w * scale,
             h: h * scale,
             fill: { color: fill }
@@ -59,8 +57,8 @@ document.getElementById("export-ppt").addEventListener("click", async () => {
         const x = Number(element.getAttribute("x"));
         const y = Number(element.getAttribute("y"));
         let textboxOpts = {
-            x: x * scale,
-            y: y * scale - 0.5 / 2,
+            x: slideMargin + x * scale,
+            y: slideMargin + y * scale - 0.5 / 2,
             w: "1",
             h: "0.5",
             color: "363636",

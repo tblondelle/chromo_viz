@@ -1,6 +1,6 @@
 const width = 500;
-const margin = { top: 10, right: 10, bottom: 10, left: 10 };
-const labelWidth = 30;
+const labelWidth = 20;
+const labelMargin = 10;
 
 let groups = [];
 let data = [];
@@ -15,8 +15,8 @@ const gapInput = document.querySelector("#gap");
 const heightInput = document.querySelector("#bar-height");
 const rowGapInput = document.querySelector("#row-gap");
 
-function drawCanvas() {
-    // No animation : used for the 3 settings
+
+function draw(withAnimation = true) {
 
     if (data.length === 0) return;
 
@@ -24,10 +24,10 @@ function drawCanvas() {
     const barHeight = +heightInput.value;
     const rowGapBp = +rowGapInput.value * barHeight;
 
+    // Update the displayed values for gap, bar height, and row gap.
     document.querySelector("#gap-value").textContent = gap;
     document.querySelector("#height-value").textContent = barHeight;
     document.querySelector("#row-gap-value").textContent = (rowGapBp / barHeight).toFixed(1);
-
 
     // Détermine l'ordre des chromosomes et leur position verticale.
     const chromosomes = [...new Set(data.map(d => d.chromosome))]
@@ -54,7 +54,7 @@ function drawCanvas() {
         const offset = offsetByChromosome.get(d.chromosome) ?? 0;
 
         d.x = offset;
-        d.y = margin.top + row * (barHeight + rowGapBp);
+        d.y = row * (barHeight + rowGapBp);
         d.row = row;
 
         offsetByChromosome.set(
@@ -70,10 +70,9 @@ function drawCanvas() {
 
     x = d3.scaleLinear()
         .domain([0, maxTotal || 1])
-        .range([0, width - margin.left - margin.right - labelWidth]);
+        .range([0, width - labelWidth - labelMargin]);
 
-    const height = margin.top + margin.bottom
-        + chromosomes.length * (barHeight + rowGapBp) - rowGapBp;
+    const height = chromosomes.length * (barHeight + rowGapBp) - rowGapBp;
 
     const svg = d3.select("#chart")
         .selectAll("svg")
@@ -90,7 +89,7 @@ function drawCanvas() {
         .attr("class", "chromosome-label")
         .attr("x", width - labelWidth)
         .attr("y", d =>
-            margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
+            d.row * (barHeight + rowGapBp) + barHeight / 2
         )
         .attr("dy", "0.35em")
         .text(d => `${d.total}bp`);
@@ -100,155 +99,7 @@ function drawCanvas() {
         .join(
             enter => enter.append("rect")
                 .attr("class", "block")
-                .attr("x", d => margin.left + x(d.x))
-                .attr("y", d => d.y)
-                .attr("width", d => x(d.size))
-                .attr("height", barHeight)
-                .attr("fill", d => d.color)
-                .style("cursor", "pointer")
-                .on("click", (event, d) => {
-                    selectedBlock = d;
-                    rightMenu.hidden = false;
-
-                    rightMenu.style.position = "fixed";
-
-                    const margin = 10;
-                    const x = event.clientX + margin;
-                    const y = event.clientY + margin;
-
-                    const maxX = window.innerWidth - rightMenu.offsetWidth - margin;
-                    const maxY = window.innerHeight - rightMenu.offsetHeight - margin;
-
-                    rightMenu.style.left = `${Math.max(margin, Math.min(x, maxX))}px`;
-                    rightMenu.style.top = `${Math.max(margin, Math.min(y, maxY))}px`;
-                })
-                .call(enter => enter
-                    .attr("width", d => x(d.size))
-                    .attr("x", d => margin.left + x(d.x))
-                ),
-
-            update => update
-                .transition()
-                .duration(20)
-                .attr("x", d => margin.left + x(d.x))
-                .attr("y", d => d.y)
-                .attr("height", barHeight)
-                .attr("width", d => x(d.size))
-                .attr("fill", d => d.color),
-
-            exit => exit
-                .attr("width", 0)
-                .attr("x", function (d) {
-                    const sameRow = data
-                        .filter(block => block.row === d.row)
-                        .sort((a, b) => a.x - b.x);
-
-                    const previous = sameRow.filter(block => block.x < d.x).at(-1);
-                    const next = sameRow.find(block => block.x >= d.x);
-
-                    const previousX = previous ? margin.left + x(previous.x + previous.size) : margin.left;
-                    const nextX = next ? margin.left + x(next.x) : width - margin.left - margin.right - labelWidth;
-
-                    return (previousX + nextX) / 2;
-                })
-                .remove()
-        );
-
-    svg.selectAll("rect.block").selectAll("title")
-        .data(d => [d])
-        .join("title")
-        .text(d =>
-            `Size: ${d.size}`
-        );
-}
-
-
-function draw() {
-    // Full blown draw function
-
-    if (data.length === 0) return;
-
-    const gap = +gapInput.value;
-    const barHeight = +heightInput.value;
-    const rowGapBp = +rowGapInput.value * barHeight;
-
-    document.querySelector("#gap-value").textContent = gap;
-    document.querySelector("#height-value").textContent = barHeight;
-    document.querySelector("#row-gap-value").textContent = (rowGapBp / barHeight).toFixed(1);
-
-
-    // Détermine l'ordre des chromosomes et leur position verticale.
-    const chromosomes = [...new Set(data.map(d => d.chromosome))]
-        .sort(d3.ascending);
-
-    const rowByChromosome = new Map(
-        chromosomes.map((chromosome, row) => [chromosome, row])
-    );
-
-    // Calcule x et y directement dans data.
-    const offsetByChromosome = new Map();
-
-    const chromosomeTotals = chromosomes.map(chromosome => ({
-        chromosome,
-        total: d3.sum(
-            data.filter(d => d.chromosome === chromosome),
-            d => d.size
-        ),
-        row: rowByChromosome.get(chromosome)
-    }));
-
-    data.forEach(d => {
-        const row = rowByChromosome.get(d.chromosome);
-        const offset = offsetByChromosome.get(d.chromosome) ?? 0;
-
-        d.x = offset;
-        d.y = margin.top + row * (barHeight + rowGapBp);
-        d.row = row;
-
-        offsetByChromosome.set(
-            d.chromosome,
-            offset + d.size + gap
-        );
-    });
-
-    const maxTotal = d3.max(
-        [...offsetByChromosome.values()],
-        total => total - gap
-    ) ?? 0;
-
-    x = d3.scaleLinear()
-        .domain([0, maxTotal || 1])
-        .range([0, width - margin.left - margin.right - labelWidth]);
-
-    const height = margin.top + margin.bottom
-        + chromosomes.length * (barHeight + rowGapBp) - rowGapBp;
-
-    const svg = d3.select("#chart")
-        .selectAll("svg")
-        .data([null])
-        .join("svg")
-        .attr("viewBox", `0 0 ${width} ${height}`)
-        .style("max-width", "100%")
-        .style("height", "auto");
-
-
-    svg.selectAll("text.chromosome-label")
-        .data(chromosomeTotals, d => d.chromosome)
-        .join("text")
-        .attr("class", "chromosome-label")
-        .attr("x", width - labelWidth)
-        .attr("y", d =>
-            margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
-        )
-        .attr("dy", "0.35em")
-        .text(d => `${d.total}bp`);
-
-    svg.selectAll("rect.block")
-        .data(data, d => d.id)
-        .join(
-            enter => enter.append("rect")
-                .attr("class", "block")
-                .attr("x", d => margin.left + x(d.x))
+                .attr("x", d => x(d.x))
                 .attr("y", d => d.y)
                 .attr("width", d => x(d.size))
                 .attr("height", barHeight)
@@ -273,21 +124,21 @@ function draw() {
                 })
                 .call(enter => enter
                     .attr("width", 0)
-                    .attr("x", d => margin.left + x(d.x + d.size / 2))
+                    .attr("x", d => x(d.x + d.size / 2))
                     .attr("height", 0)
                     .attr("y", d => d.y + barHeight / 2)
                     .transition()
-                    .duration(200)
+                    .duration(withAnimation ? 200 : 20)
                     .attr("width", d => x(d.size))
-                    .attr("x", d => margin.left + x(d.x))
+                    .attr("x", d => x(d.x))
                     .attr("height", barHeight)
                     .attr("y", d => d.y)
                 ),
 
             update => update
                 .transition()
-                .duration(200)
-                .attr("x", d => margin.left + x(d.x))
+                .duration(withAnimation ? 200 : 20)
+                .attr("x", d => x(d.x))
                 .attr("y", d => d.y)
                 .attr("height", barHeight)
                 .attr("width", d => x(d.size))
@@ -295,7 +146,7 @@ function draw() {
 
             exit => exit
                 .transition()
-                .duration(200)
+                .duration(withAnimation ? 200 : 20)
                 .attr("width", 0)
                 .attr("x", function (d) {
                     const sameRow = data
@@ -318,129 +169,6 @@ function draw() {
         .join("title")
         .text(d =>
             `Size: ${d.size}`
-        );
-}
-
-
-function drawValue() {
-
-    if (data.length === 0) return;
-
-    const gap = +gapInput.value;
-    const barHeight = +heightInput.value;
-    const rowGapBp = +rowGapInput.value * barHeight;
-
-    document.querySelector("#gap-value").textContent = gap;
-    document.querySelector("#height-value").textContent = barHeight;
-    document.querySelector("#row-gap-value").textContent = (rowGapBp / barHeight).toFixed(1);
-
-
-    // Détermine l'ordre des chromosomes et leur position verticale.
-    const chromosomes = [...new Set(data.map(d => d.chromosome))]
-        .sort(d3.ascending);
-
-    const rowByChromosome = new Map(
-        chromosomes.map((chromosome, row) => [chromosome, row])
-    );
-
-    // Calcule x et y directement dans data.
-    const offsetByChromosome = new Map();
-
-    const chromosomeTotals = chromosomes.map(chromosome => ({
-        chromosome,
-        total: d3.sum(
-            data.filter(d => d.chromosome === chromosome),
-            d => d.size
-        ),
-        row: rowByChromosome.get(chromosome)
-    }));
-
-    data.forEach(d => {
-        const row = rowByChromosome.get(d.chromosome);
-        const offset = offsetByChromosome.get(d.chromosome) ?? 0;
-
-        d.x = offset;
-        d.y = margin.top + row * (barHeight + rowGapBp);
-        d.row = row;
-
-        offsetByChromosome.set(
-            d.chromosome,
-            offset + d.size + gap
-        );
-    });
-
-    const maxTotal = d3.max(
-        [...offsetByChromosome.values()],
-        total => total - gap
-    ) ?? 0;
-
-    const x = d3.scaleLinear()
-        .domain([0, maxTotal || 1])
-        .range([0, width - margin.left - margin.right - labelWidth]);
-
-    const height = margin.top + margin.bottom
-        + chromosomes.length * (barHeight + rowGapBp) - rowGapBp;
-
-    const svg = d3.select("#chart")
-        .selectAll("svg")
-        .data([null])
-        .join("svg")
-        .attr("viewBox", `0 0 ${width} ${height}`)
-        .style("max-width", "100%")
-        .style("height", "auto");
-
-    svg.selectAll("text.chromosome-label")
-        .data(chromosomeTotals, d => d.chromosome)
-        .join("text")
-        .attr("class", "chromosome-label")
-        .attr("x", width - 3 * margin.right)
-        .attr("y", d =>
-            margin.top + d.row * (barHeight + rowGapBp) + barHeight / 2
-        )
-        .attr("dy", "0.35em")
-        .text(d => `${d.total}bp`);
-
-    svg.selectAll("rect.block")
-        .data(data, d => d.id)
-        .join(
-            enter => enter.append("rect")
-                .attr("class", "block")
-                .attr("x", d => margin.left + x(d.x))
-                .attr("y", d => d.y)
-                .attr("width", d => x(d.size))
-                .attr("height", barHeight)
-                .attr("fill", d => d.color)
-                .style("cursor", "pointer")
-                .on("click", (event, d) => {
-                    selectedBlock = d;
-                    rightMenu.hidden = false;
-                    rightMenu.style.position = "fixed";
-                    rightMenu.style.left = `${event.clientX + 10}px`;
-                    rightMenu.style.top = `${event.clientY + 10}px`;
-                })
-                .call(enter => enter
-                    .attr("width", 0)
-                    .attr("x", 0)
-                    .transition()
-                    .duration(400)
-                    .attr("width", d => x(d.size))
-                    .attr("x", d => margin.left + x(d.x))
-                ),
-
-            update => update
-                .transition()
-                .duration(400)
-                .attr("x", d => margin.left + x(d.x))
-                .attr("y", d => d.y)
-                .attr("height", barHeight)
-                .attr("width", d => x(d.size))
-                .attr("fill", d => d.color),
-
-            exit => exit
-                .transition()
-                .duration(400)
-                .attr("width", 0)
-                .remove()
         );
 }
 
@@ -490,11 +218,11 @@ fetch("src/server/static/data.csv")
 const dialog = document.querySelector("#about-dialog");
 
 document.querySelector("#about").addEventListener("click", () => {
-  dialog.showModal();
+    dialog.showModal();
 });
 
 dialog.querySelector(".close-button").addEventListener("click", () => {
-  dialog.close();
+    dialog.close();
 });
 
 
@@ -569,11 +297,11 @@ fileInput.addEventListener("change", async event => {
     }
 });
 
-gapInput.addEventListener("input", drawCanvas);
+gapInput.addEventListener("input", () => draw(false));
 
-heightInput.addEventListener("input", drawCanvas);
+heightInput.addEventListener("input", () => draw(false));
 
-rowGapInput.addEventListener("input", drawCanvas);
+rowGapInput.addEventListener("input", () => draw(false));
 
 // Menus
 document.addEventListener("click", event => {
@@ -600,8 +328,8 @@ document.querySelector("#edit-size").addEventListener("click", () => {
     if (!selectedBlock) return;
 
     const value = prompt("New size:", selectedBlock.size);
-    if (value === null) return;
 
+    if (value === null) return;
     const size = Number(value);
     if (!Number.isFinite(size) || size <= 0) {
         alert("Please enter a size greater than 0.");
@@ -620,7 +348,6 @@ document.querySelector("#remove-seq").addEventListener("click", () => {
         alert("The graph must contain at least one sequence.");
         return;
     }
-
 
     const index = data.findIndex(d => d.id === selectedBlock.id);
     if (index === -1) return;
@@ -692,8 +419,9 @@ document.querySelector("#remove-chr").addEventListener("click", () => {
     if (!selectedBlock) return;
 
     const chromosome = selectedBlock.chromosome;
-    const remainingBlocks = data.filter(d => d.chromosome !== chromosome);
 
+    // Check first there is at least another chromosome
+    const remainingBlocks = data.filter(d => d.chromosome !== chromosome);
     if (remainingBlocks.length === 0) {
         alert("The graph must contain at least one sequence.");
         return;
@@ -770,5 +498,5 @@ colorPicker.addEventListener("input", () => {
     if (!selectedBlock) return;
 
     selectedBlock.color = colorPicker.value;
-    drawCanvas();
+    draw(false);
 });
