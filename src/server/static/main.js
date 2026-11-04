@@ -79,14 +79,25 @@ function draw(withAnimation = true) {
 
     svg.selectAll("text.chromosome-label")
         .data(chromosomeTotals, d => d.row_nb)
-        .join("text")
-        .attr("class", "chromosome-label")
-        .attr("x", width - labelWidth)
-        .attr("y", d =>
-            topMargin + d.row_nb * (barHeight + rowGapBp) + barHeight / 2
-        )
-        .attr("dy", "0.35em")
-        .text(d => `${d.total}bp`);
+        .join(
+            enter => enter.append("text")
+                .attr("x", width - labelWidth)
+                .attr("class", "chromosome-label")
+                .attr("y", d =>
+                    topMargin + d.row_nb * (barHeight + rowGapBp) + barHeight / 2
+                )
+                .attr("dy", "0.35em")
+                .text(d => `${d.total}bp`),
+            update => update
+                .transition()
+                .duration(withAnimation ? 200 : 20)
+                .text(d => `${d.total}bp`),
+            exit => exit
+                .transition()
+                .duration(withAnimation ? 200 : 20)
+                .attr("x", width)
+                .remove()
+        );
 
     svg.selectAll("rect.block")
         .data(data, d => d.id)
