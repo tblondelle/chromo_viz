@@ -1,9 +1,8 @@
 const width = 500;
-const labelWidth = 20;
+const labelWidth = 30;
 const labelMargin = 10;
 const topMargin = 3;
 
-let groups = [];
 let data = [];
 let selectedBlock = null;
 let nextBlockId = 0
@@ -30,51 +29,46 @@ function draw(withAnimation = true) {
     document.querySelector("#height-value").textContent = barHeight;
     document.querySelector("#row-gap-value").textContent = (rowGapBp / barHeight).toFixed(1);
 
-    // Détermine l'ordre des chromosomes et leur position verticale.
-    const chromosomes = [...new Set(data.map(d => d.chromosome))]
-        .sort(d3.ascending);
-
-    const rowByChromosome = new Map(
-        chromosomes.map((chromosome, row) => [chromosome, row])
+    // Enrich data with x and y.
+    data.sort((a, b) =>
+        a.row_nb - b.row_nb || a.seq_nb - b.seq_nb
     );
-
-    // Calcule x et y directement dans data.
-    const offsetByChromosome = new Map();
-
-    const chromosomeTotals = chromosomes.map(chromosome => ({
-        chromosome,
-        total: d3.sum(
-            data.filter(d => d.chromosome === chromosome),
-            d => d.size
-        ),
-        row: rowByChromosome.get(chromosome)
-    }));
-
-    data.forEach(d => {
-        const row = rowByChromosome.get(d.chromosome);
-        const offset = offsetByChromosome.get(d.chromosome) ?? 0;
-
-        d.x = offset;
-        d.y = topMargin + row * (barHeight + rowGapBp);
-        d.row = row;
-
-        offsetByChromosome.set(
-            d.chromosome,
-            offset + d.size + gap
-        );
+    var previousSeq;
+    data.forEach(seq => {
+        if (seq.row_nb !== previousSeq?.row_nb) {
+            previousSeq = null;
+        }
+        seq.x = previousSeq ? previousSeq.x + previousSeq.size + gap : 0;
+        seq.y = topMargin + seq.row_nb * (barHeight + rowGapBp);
+        previousSeq = seq;
     });
 
-    const maxTotal = d3.max(
-        [...offsetByChromosome.values()],
-        total => total - gap
-    ) ?? 0;
+    // Create chromosomeTotals
+    const nbChromosomes = d3.max(data, d => d.row_nb) + 1;
+    var chromosomeTotals = [];
+    for (let chrNumber = 0; chrNumber < nbChromosomes; chrNumber++) {
+        chromosomeTotals.push({
+            row_nb: chrNumber,
+            total: d3.sum(
+                data.filter(d => d.row_nb === chrNumber),
+                d => d.size
+            ),
+            totalX: d3.max(
+                data.filter(d => d.row_nb === chrNumber),
+                d => d.x + d.size
+            )
+        });
+    }
+
+    const maxTotal = d3.max(chromosomeTotals, d => d.totalX);
 
     x = d3.scaleLinear()
         .domain([0, maxTotal || 1])
         .range([0, width - labelWidth - labelMargin]);
 
-    const height = topMargin + chromosomes.length * (barHeight + rowGapBp) - rowGapBp;
+    const height = topMargin + nbChromosomes * (barHeight + rowGapBp) - rowGapBp;
 
+    // Drawing time.
     const svg = d3.select("#chart")
         .selectAll("svg")
         .data([null])
@@ -83,14 +77,13 @@ function draw(withAnimation = true) {
         .style("max-width", "100%")
         .style("height", "auto");
 
-
     svg.selectAll("text.chromosome-label")
-        .data(chromosomeTotals, d => d.chromosome)
+        .data(chromosomeTotals, d => d.row_nb)
         .join("text")
         .attr("class", "chromosome-label")
         .attr("x", width - labelWidth)
         .attr("y", d =>
-            topMargin + d.row * (barHeight + rowGapBp) + barHeight / 2
+            topMargin + d.row_nb * (barHeight + rowGapBp) + barHeight / 2
         )
         .attr("dy", "0.35em")
         .text(d => `${d.total}bp`);
@@ -148,10 +141,11 @@ function draw(withAnimation = true) {
             exit => exit
                 .transition()
                 .duration(withAnimation ? 200 : 20)
+                .attr("height", 0)
                 .attr("width", 0)
                 .attr("x", function (d) {
                     const sameRow = data
-                        .filter(block => block.row === d.row)
+                        .filter(block => block.row_nb === d.row_nb)
                         .sort((a, b) => a.x - b.x);
 
                     const previous = sameRow.filter(block => block.x < d.x).at(-1);
@@ -173,7 +167,6 @@ function draw(withAnimation = true) {
         );
 }
 
-
 function loadCsvText(text) {
 
     const header = text.split(/\r?\n/).find(line => line.trim() !== "") ?? "";
@@ -185,18 +178,54 @@ function loadCsvText(text) {
         );
     }
 
-    nextBlockId = 0;
-    data = d3.dsvFormat(";").parse(text, d => ({
-        chromosome: Number(d.chromosome_number),
-        size: Number(d.size),
-        color: d.color.startsWith("#") ? d.color : `#${d.color}`,
-        id: nextBlockId++,
-    }));
+    var previousChromosomeNumber = -1;
+    var seq_nb = 0;
 
+    data = d3.dsvFormat(";").parse(text, d => {
 
-    d3.select("#chart")
-        .selectAll("svg")
-        .selectAll("*").remove()
+        if (!Number.isInteger(+d.chromosome_number) || Number(+d.chromosome_number) < 0) {
+            throw new Error("Chromosome should be a positive integer." + d);
+        }
+
+        // Check size is integer.
+        if (!Number.isInteger(+d.size) || Number(+d.size) < 0) {
+            throw new Error("Size should be a positive integer.");
+        }
+
+        // Check color has the right format.
+        const isHexColor = /^#[0-9A-Fa-f]{6}$/.test(d.color);
+        if (!isHexColor) {
+            throw new Error("Expected a color in #RRGGBB format.");
+        }
+
+        // Check order of chromosomes
+        if (Number(+d.chromosome_number) < previousChromosomeNumber) {
+            throw new Error("Chromosomes are not ordered in file.");
+        }
+
+        // Reset sequence number for new chromosome.
+        if (Number(d.chromosome_number) == previousChromosomeNumber) {
+            seq_nb++;
+        }
+        else if (Number(d.chromosome_number) == previousChromosomeNumber + 1) {
+            seq_nb = 0;
+        }
+        else {
+            throw new Error("Chromosomes number are not consecutive in file. First chromosome should be 0, then 1, then 2, etc.");
+        }
+
+        var line = {
+            id: nextBlockId++,
+            row_nb: Number(+d.chromosome_number),
+            seq_nb: seq_nb,
+            size: +d.size,
+            color: d.color,
+        }
+
+        previousChromosomeNumber = Number(+d.chromosome_number);
+
+        return line
+    });
 
     draw();
 }
@@ -211,7 +240,7 @@ fetch("src/server/static/data.csv")
     .then(loadCsvText)
     .catch(error => {
         console.error("Impossible to load CSV file:", error);
-        alert("The default CSV file could not be loaded.");
+        alert("The default CSV file could not be loaded.\n" + error);
     });
 
 
@@ -235,15 +264,13 @@ document.querySelector("#export-csv").addEventListener("click", () => {
 
     const rows = [["chromosome_number", "size", "color"]];
 
-    data.sort((a, b) => a.row - b.row || a.x - b.x);
-
-    // Use row instead of chromosome for the export. Sort before.
+    data.sort((a, b) => a.row_nb - b.row_nb || a.seq_nb - b.seq_nb);
     data.forEach(d => {
-        rows.push([d.row, d.size, d.color]);
+        rows.push([d.row_nb, d.size, d.color]);
     });
 
     const csv = rows
-        .map(row => row.map(value => String(value ?? ""))
+        .map(row_nb => row_nb.map(value => String(value ?? ""))
             .join(";"))
         .join("\r\n");
 
@@ -353,7 +380,27 @@ document.querySelector("#remove-seq").addEventListener("click", () => {
     const index = data.findIndex(d => d.id === selectedBlock.id);
     if (index === -1) return;
 
+    // Remove sequence
     data.splice(index, 1);
+
+    if (data.filter(d => d.row_nb === selectedBlock.row_nb).length === 0) {
+        // Renumber the chromosomes
+        data.forEach(d => {
+            if (d.row_nb > selectedBlock.row_nb) {
+                d.row_nb--;
+            }
+        });
+    }
+    else {
+        // Renumber sequence
+        data.filter(d => d.row_nb === selectedBlock.row_nb)
+            .forEach(d => {
+                if (d.seq_nb >= selectedBlock.seq_nb) {
+                    d.seq_nb--;
+                }
+            })
+    }
+
     selectedBlock = null;
 
     draw();
@@ -372,17 +419,28 @@ document.querySelector("#add-before").addEventListener("click", () => {
         return;
     }
 
-    const index = data.findIndex(d => d.id === selectedBlock.id);
-    if (index === -1) return;
-
-    const newBlock = {
+    // Create the new element
+    const newSequence = {
         id: nextBlockId++,
-        chromosome: selectedBlock.chromosome,
+        row_nb: selectedBlock.row_nb,
+        seq_nb: selectedBlock.seq_nb,
         size,
         color: selectedBlock.color
     };
 
-    data.splice(index, 0, newBlock);
+    // Renumber the seq_nb of the following blocks in the same chromosome
+    data.filter(d => d.row_nb === selectedBlock.row_nb)
+        .forEach(d => {
+            if (d.seq_nb >= selectedBlock.seq_nb) {
+                d.seq_nb++;
+            }
+        })
+
+    // Insert the new element before the selected block
+    const index = data.findIndex(d => d.id === selectedBlock.id);
+    if (index === -1) return;
+
+    data.splice(index, 0, newSequence);
 
     draw();
     rightMenu.hidden = true;
@@ -400,17 +458,28 @@ document.querySelector("#add-after").addEventListener("click", () => {
         return;
     }
 
-    const index = data.findIndex(d => d.id === selectedBlock.id);
-    if (index === -1) return;
-
-    const newBlock = {
+    // Create the new element
+    const newSequence = {
         id: nextBlockId++,
-        chromosome: selectedBlock.chromosome,
+        row_nb: selectedBlock.row_nb,
+        seq_nb: selectedBlock.seq_nb + 1,
         size,
         color: selectedBlock.color
     };
 
-    data.splice(index + 1, 0, newBlock);
+    // Renumber the seq_nb of the following blocks in the same chromosome
+    data.filter(d => d.row_nb === selectedBlock.row_nb)
+        .forEach(d => {
+            if (d.seq_nb > selectedBlock.seq_nb) {
+                d.seq_nb++;
+            }
+        })
+
+    // Insert the new element before the selected block
+    const index = data.findIndex(d => d.id === selectedBlock.id);
+    if (index === -1) return;
+
+    data.splice(index + 1, 0, newSequence);
 
     draw();
     rightMenu.hidden = true;
@@ -419,20 +488,22 @@ document.querySelector("#add-after").addEventListener("click", () => {
 document.querySelector("#remove-chr").addEventListener("click", () => {
     if (!selectedBlock) return;
 
-    const chromosome = selectedBlock.chromosome;
-
     // Check first there is at least another chromosome
-    const remainingBlocks = data.filter(d => d.chromosome !== chromosome);
+    const remainingBlocks = data.filter(d => d.row_nb !== selectedBlock.row_nb);
     if (remainingBlocks.length === 0) {
         alert("The graph must contain at least one sequence.");
         return;
     }
 
-    for (let i = data.length - 1; i >= 0; i--) {
-        if (data[i].chromosome === chromosome) {
-            data.splice(i, 1);
+    // Remove chromosome
+    data = data.filter(d => d.row_nb != selectedBlock.row_nb)
+
+    // Renumber the chromosomes
+    data.forEach(d => {
+        if (d.row_nb > selectedBlock.row_nb) {
+            d.row_nb--;
         }
-    }
+    });
 
     selectedBlock = null;
     draw();
@@ -442,22 +513,22 @@ document.querySelector("#remove-chr").addEventListener("click", () => {
 document.querySelector("#add-before-chr").addEventListener("click", () => {
     if (!selectedBlock) return;
 
-    const sourceChromosome = selectedBlock.chromosome;
+    const sourceChromosome = selectedBlock.row_nb;
 
     // Décale le chromosome sélectionné et ceux qui le suivent.
     data.forEach(d => {
-        if (d.chromosome >= sourceChromosome) {
-            d.chromosome += 1;
+        if (d.row_nb >= sourceChromosome) {
+            d.row_nb++;
         }
     });
 
     // La copie prend le numéro libéré : elle apparaît avant l'original.
     const copies = data
-        .filter(d => d.chromosome === sourceChromosome + 1)
+        .filter(d => d.row_nb === sourceChromosome + 1)
         .map(d => ({
             ...d,
             id: nextBlockId++,
-            chromosome: sourceChromosome
+            row_nb: sourceChromosome
         }));
 
     data.push(...copies);
@@ -470,20 +541,20 @@ document.querySelector("#add-before-chr").addEventListener("click", () => {
 document.querySelector("#add-after-chr").addEventListener("click", () => {
     if (!selectedBlock) return;
 
-    const sourceChromosome = selectedBlock.chromosome;
+    const sourceChromosome = selectedBlock.row_nb;
 
     const copies = data
-        .filter(d => d.chromosome === sourceChromosome)
+        .filter(d => d.row_nb === sourceChromosome)
         .map(d => ({
             ...d,
             id: nextBlockId++,
-            chromosome: sourceChromosome + 1
+            row_nb: sourceChromosome + 1
         }));
 
     // Libère le numéro suivant en décalant les chromosomes existants.
     data.forEach(d => {
-        if (d.chromosome > sourceChromosome) {
-            d.chromosome += 1;
+        if (d.row_nb > sourceChromosome) {
+            d.row_nb++;
         }
     });
 

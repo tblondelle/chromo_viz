@@ -15,7 +15,7 @@ dependencies = [
 
 [project.scripts]
 chromo_viz = "chromo_viz:main"
-chromo_viz_server = "server:man"
+chromo_viz_server = "server:main"
 
 [build-system]
 requires = ["uv_build>=0.13.1,<0.14.0"]
