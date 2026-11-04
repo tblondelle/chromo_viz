@@ -91,6 +91,10 @@ function draw(withAnimation = true) {
             update => update
                 .transition()
                 .duration(withAnimation ? 200 : 20)
+                .attr("y", d =>
+                    topMargin + d.row_nb * (barHeight + rowGapBp) + barHeight / 2
+                )
+                .attr("dy", "0.35em")
                 .text(d => `${d.total}bp`),
             exit => exit
                 .transition()
