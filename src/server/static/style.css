@@ -6,42 +6,64 @@ body {
 .page-header {
   display: flex;
   align-items: normal;
-  justify-content: space-between;
+  justify-content: left;
   padding: 1rem 1.5rem;
   margin: 0;
   background: linear-gradient(to right, #f2f2f2, white);
   position: relative;
   z-index: 1;
+  /* padding-bottom: 20px; */
+  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.2);
 }
 
 header h1,
-header h3,
 header p {
   margin: 0;
 }
 
-header h3 {
-  font-size: 14px;
-  font-weight: normal;
-  margin-left: 10px;
-}
-
-header h3:hover {
-  font-size: 14px;
-  font-weight: normal;
-  margin-left: 10px;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-#about {
+.header-button {
+  margin: 5px;
+  padding: 5px;
+  padding-left: 2ch;
+  padding-right: 2ch;
   border: none;
-  cursor: pointer;
+  border-radius: 4px;
   background: none;
+  color: rgb(0, 0, 0);
+  font-size: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  /* width: 7ch; */
+  /* box-shadow: 2px 2px 2px 1px rgb(0 0 0 / 20%); */
 }
 
-#about:hover {
-  text-decoration: underline;
+.header-button:hover {
+  background: white;
+  box-shadow: 3px 3px 2px 1px rgb(0 0 0 / 20%);
+}
+
+.header-button:active {
+  transform: translate(0px, 1px);
+  /* background: #cfcfcf; */
+  box-shadow: 3px 3px 2px 0px rgb(0 0 0 / 20%);
+}
+
+.header-button.is-on {
+  transform: translate(0px, 0px);
+  background: white;
+  box-shadow: 2px 2px 2px 0px rgb(0 0 0 / 20%);
+  font-weight: 600;
+}
+
+.header-button.is-on:hover {
+  transform: translate(0px, 0px);
+  background: white;
+  box-shadow: 3px 3px 2px 1px rgb(0 0 0 / 20%);
+}
+
+.header-button.is-on:active {
+  transform: translate(0px, 1px);
+  box-shadow: 3px 3px 2px 0px rgb(0 0 0 / 20%);
 }
 
 dialog {
@@ -76,15 +98,17 @@ header p {
   margin-top: 0.4rem;
 }
 
-.left-side {
+.header-left {
   display: flex;
-  gap: 0; /* aucun espace entre les deux */
+  gap: 0;
+  /* aucun espace entre les deux */
 }
 
-.header-base {
+.header-title {
   display: flex;
   align-items: baseline;
   gap: 12px;
+  margin: 0 20px 0 0;
 }
 
 .home-button {
@@ -95,71 +119,54 @@ header p {
 }
 
 .home-button img {
-
   width: 28px;
   height: 28px;
   filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.589));
 }
 
-
-.round-button {
-  border: 1px solid #bcbcbc;
-  border-radius: 4px;
-  background: white;
-  color: rgb(0, 0, 0);
-  font-size: 0.7rem;
-  display: inline-flex;
-  align-items: center;
-  /* centrage vertical */
-  justify-content: center;
-  /* centrage horizontal */
-  gap: 6px;
-  cursor: pointer;
-  margin: 2px;
-  padding-right: 8px;
-  box-shadow: 2px 2px 2px 1px rgb(0 0 0 / 20%);
-}
-
-.round-button:hover {
-  background: #e5e5e5;
-  box-shadow: 3px 3px 2px 1px rgb(0 0 0 / 20%);
-}
-
-.round-button:active {
-  transform: translate(0px, 1px);
-  background: #cfcfcf;
-  box-shadow: 0px 0px 0px 1px rgb(0 0 0 / 20%);
-}
-
-.round-button span {
-  display: block;
-}
-
-
 .settings {
   background-color: white;
-  width: 100%;
-  padding-bottom: 20px;
+  transition: transform 200ms ease, height 200ms ease;
   box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+.hidden {
+  transition-duration: 200ms;
+  height: 0;
+  transform: translateY(-300px);
 }
 
 .settings .title {
   font-size: large;
 }
 
-.real-settings {
+.settings-menu {
   width: 100%;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 100ms ease, height 100ms ease;
 }
 
+.settings-menu.transparent {
+  max-height: 0px;
+  opacity: 0;
+}
+
+
+
 .setting {
-  padding-bottom: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   padding-left: 30px;
   padding-right: 30px;
   margin-right: 10px;
-  margin-top: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   flex-direction: column;
   justify-content: center;
   display: flex;
@@ -167,8 +174,25 @@ header p {
   font-size: small;
   border-radius: 4px;
   border: 1px solid #d8d7d7;
-  ;
+  font-family: Arial, Helvetica, sans-serif;
+  background: white;
   box-shadow: 2px 2px 2px 1px rgb(0 0 0 / 20%);
+}
+
+button.setting {
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+button.setting:hover {
+  background: #e5e5e5;
+  box-shadow: 3px 3px 2px 1px rgb(0 0 0 / 20%);
+}
+
+button.setting:active {
+  transform: translate(0px, 1px);
+  background: #cfcfcf;
+  box-shadow: 0px 0px 0px 1px rgb(0 0 0 / 20%);
 }
 
 .setting h1 {

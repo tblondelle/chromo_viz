@@ -15,152 +15,60 @@
 <body>
 
   <header class="page-header">
-    <div class="left-side">
+    <div class="header-left">
       <div class="home-button">
         <img src="src/server/static/favicon2.PNG" alt="Chromo Viz Icon">
       </div>
-
-      <div class="header-base">
+      <div class="header-title">
         <h1>Chromo Viz</h1>
-        <button id="about"">About</button>
-
-        <dialog id="about-dialog" aria-labelledby="dialog-title" closedby="any">
-          <button class="close-button" aria-label="Close">×</button>
-
-          <h2 id="dialog-title">About Chromo Viz</h2>
-          <p>
-            Chromo Viz helps you visualize your chromosome sequences.
-          </p>
-          <p>
-            Version: 1.2.1 (nov. 2026)
-          </p>
-          <p>
-            🤔 Found a bug?
-            <a href="https://github.com/tblondelle/chromo_viz/issues" target="_blank" rel="noopener noreferrer">Open an
-              issue on GitHub</a>
-          </p>
-          <p>
-            🥰 Want to show your support?
-            <a href="https://github.com/tblondelle/chromo_viz" target="_blank" rel="noopener noreferrer">Star the
-              repository</a>
-          </p>
-          </dialog>
       </div>
     </div>
+    <div class="header-right">
+      <button id="header-button-file" class="header-button">File</button>
+      <button id="header-button-layout" class="header-button is-on">Layout</button>
+      <button id="about" class="header-button">About</button>
+    </div>
+  </header>
 
-    <div class="header-actions">
+  <div id="setting-panel" class="settings">
 
-      <input id="csv-file" type="file" accept=".csv,text/csv" hidden>
-      <button id="load-csv" class="round-button" type="button" aria-label="Load CSV">
+    <div class="settings-menu transparent" id="settings-menu-file">
+
+      <button id="load-csv" class="setting" type="button" aria-label="Load CSV">
+        <input id="csv-file" type="file" accept=".csv,text/csv" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">
           <path
             d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
-        </svg>Open new CSV
+        </svg>
+        <h1>Open new CSV</h1>
       </button>
 
-      <button id="export-csv" class="round-button" type="button" aria-label="Download CSV">
+      <button id="export-csv" class="setting" type="button" aria-label="Download CSV">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black">
           <path
             d="M18,21l4-4l-1.4-1.4L19,17.2V13.02H17V17.2l-1.6-1.6L14,17l4,4Zm-4,3V22h8v2H14ZM6,20q-0.82,0-1.41-0.59T4,18V4Q4,3.17 4.59,2.59T6,2h7l6,6v3.02H17V9H12V4H6V18h6v2H6Zm0-2V11.02V9V4V18Z" />
         </svg>
-        Save as CSV
+        <h1>Save as CSV</h1>
       </button>
 
-      <button id="export-svg" class="round-button" type="button">
+      <button id="export-svg" class="setting" type="button">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f">
           <path
             d="M12,12ZM5.05,22.38l-1.4-1.43L6.6,18H4.35V16H10v5.65H8V19.43L5.05,22.38ZM12,22V20h6V9H13V4H6V14H4V4Q4,3.17 4.59,2.59T6,2h8l6,6V20q0,0.82-0.59,1.41T18,22H12Z" />
         </svg>
-        Export as SVG
+        <h1>Export as SVG</h1>
       </button>
 
-      <button id="export-ppt" class="round-button" type="button">
+      <button id="export-ppt" class="setting" type="button">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f">
           <path
             d="M12,12ZM5.05,22.38l-1.4-1.43L6.6,18H4.35V16H10v5.65H8V19.43L5.05,22.38ZM12,22V20h6V9H13V4H6V14H4V4Q4,3.17 4.59,2.59T6,2h8l6,6V20q0,0.82-0.59,1.41T18,22H12Z" />
-        </svg>Export as PowerPoint
+        </svg>
+        <h1>Export as PowerPoint</h1>
       </button>
-
-
-    </div>
-  </header>
-
-  <div class="settings">
-
-    <div id="right-menu" hidden>
-      <div class="right-menu-choice" id="edit-size">
-        <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-          fill="#1f1f1f">
-          <path
-            d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
-        </svg>
-        <span>Edit value</span>
-      </div>
-      <div class="right-menu-choice" id="edit-color">
-        <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-          fill="#1f1f1f">
-          <path
-            d="M346-140 100-386q-10-10-15-22t-5-25q0-13 5-25t15-22l230-229-106-106 62-65 400 400q10 10 14.5 22t4.5 25q0 13-4.5 25T686-386L440-140q-10 10-22 15t-25 5q-13 0-25-5t-22-15Zm47-506L179-432h428L393-646Zm399 526q-36 0-61-25.5T706-208q0-27 13.5-51t30.5-47l42-54 44 54q16 23 30 47t14 51q0 37-26 62.5T792-120Z" />
-        </svg>
-        Edit color
-      </div>
-      <hr>
-      <div class="right-menu-choice" id="add-before">
-        <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-          fill="#1f1f1f">
-          <path
-            d="M800-200v-560H560v560h240Zm-640 80v-160h80v80h240v-560H240v80h-80v-160h720v720H160Zm320-360Zm80 0h-80 80Zm0 0ZM160-360v-80H80v-80h80v-80h80v80h80v80h-80v80h-80Z" />
-        </svg>
-        Add sequence before
-      </div>
-      <div class="right-menu-choice" id="add-after">
-        <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-          fill="#1f1f1f">
-          <path
-            d="M160-760v560h240v-560H160ZM80-120v-720h720v160h-80v-80H480v560h240v-80h80v160H80Zm400-360Zm-80 0h80-80Zm0 0Zm320 120v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z" />
-        </svg>
-        Add sequence after
-      </div>
-      <div class="right-menu-choice" id="remove-seq">
-        <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-          fill="#1f1f1f">
-          <path
-            d="M560-280H120v-400h720v120h-80v-40H200v240h360v80Zm-360-80v-240 240Zm440 104 84-84-84-84 56-56 84 84 84-84 56 56-83 84 83 84-56 56-84-83-84 83-56-56Z" />
-        </svg>
-        Remove sequence
-      </div>
-      <hr>
-      <div class="right-menu-choice" id="add-before-chr">
-        <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-          fill="#1f1f1f">
-          <path
-            d="M200-160h560v-240H200v240Zm640 80H120v-720h160v80h-80v240h560v-240h-80v-80h160v720ZM480-480Zm0 80v-80 80Zm0 0Zm-40-240v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z" />
-        </svg>
-        Add chromosome before
-      </div>
-      <div class="right-menu-choice" id="add-after-chr">
-        <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-          fill="#1f1f1f">
-          <path
-            d="M200-560h560v-240H200v240Zm-80 400v-720h720v720H680v-80h80v-240H200v240h80v80H120Zm360-320Zm0-80v80-80Zm0 0ZM440-80v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z" />
-        </svg>
-        Add chromosome after
-      </div>
-      <div class="right-menu-choice" id="remove-chr">
-        <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-          fill="#1f1f1f">
-          <path
-            d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z" />
-        </svg>
-        Remove chromosome
-      </div>
     </div>
 
-    <input id="color-picker" type="color" hidden>
-
-    <div class="title"></div>
-
-    <div class="real-settings">
+    <div class="settings-menu" id="settings-menu-layout">
 
       <label class="setting">
         <h1>
@@ -173,7 +81,8 @@
           Vertical spacing
         </h1>
         <input id="row-gap" type="range" min="0" max="5" value="2" step="0.05">
-        <div><span id="row-gap-value">__</span>
+        <div class="layout-value">
+          <span id="row-gap-value">__</span>
           <span>eq.chromosomes</span>
         </div>
       </label>
@@ -190,7 +99,8 @@
           Chromosome height
         </h1>
         <input id="bar-height" type="range" min="1" max="40" value="14" step="0.05">
-        <div><span id="height-value">14</span>
+        <div class="layout-value">
+          <span id="height-value">14</span>
           <span>arb. unit</span>
         </div>
       </label>
@@ -206,7 +116,8 @@
           Horizontal gap
         </h1>
         <input id="gap" type="range" min="0" max="100" value="1" step="0.05">
-        <div><span id="gap-value">1</span>
+        <div class="layout-value">
+          <span id="gap-value">1</span>
           <span>bp</span>
         </div>
       </label>
@@ -219,6 +130,100 @@
     <div id="chart"></div>
   </div>
 
+  <div id="right-menu" hidden>
+    <div class="right-menu-choice" id="edit-size">
+      <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+        fill="#1f1f1f">
+        <path
+          d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
+      </svg>
+      <span>Edit value</span>
+    </div>
+    <div class="right-menu-choice" id="edit-color">
+      <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+        fill="#1f1f1f">
+        <path
+          d="M346-140 100-386q-10-10-15-22t-5-25q0-13 5-25t15-22l230-229-106-106 62-65 400 400q10 10 14.5 22t4.5 25q0 13-4.5 25T686-386L440-140q-10 10-22 15t-25 5q-13 0-25-5t-22-15Zm47-506L179-432h428L393-646Zm399 526q-36 0-61-25.5T706-208q0-27 13.5-51t30.5-47l42-54 44 54q16 23 30 47t14 51q0 37-26 62.5T792-120Z" />
+      </svg>
+      Edit color
+    </div>
+    <hr>
+    <div class="right-menu-choice" id="add-before">
+      <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+        fill="#1f1f1f">
+        <path
+          d="M800-200v-560H560v560h240Zm-640 80v-160h80v80h240v-560H240v80h-80v-160h720v720H160Zm320-360Zm80 0h-80 80Zm0 0ZM160-360v-80H80v-80h80v-80h80v80h80v80h-80v80h-80Z" />
+      </svg>
+      Add sequence before
+    </div>
+    <div class="right-menu-choice" id="add-after">
+      <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+        fill="#1f1f1f">
+        <path
+          d="M160-760v560h240v-560H160ZM80-120v-720h720v160h-80v-80H480v560h240v-80h80v160H80Zm400-360Zm-80 0h80-80Zm0 0Zm320 120v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z" />
+      </svg>
+      Add sequence after
+    </div>
+    <div class="right-menu-choice" id="remove-seq">
+      <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+        fill="#1f1f1f">
+        <path
+          d="M560-280H120v-400h720v120h-80v-40H200v240h360v80Zm-360-80v-240 240Zm440 104 84-84-84-84 56-56 84 84 84-84 56 56-83 84 83 84-56 56-84-83-84 83-56-56Z" />
+      </svg>
+      Remove sequence
+    </div>
+    <hr>
+    <div class="right-menu-choice" id="add-before-chr">
+      <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+        fill="#1f1f1f">
+        <path
+          d="M200-160h560v-240H200v240Zm640 80H120v-720h160v80h-80v240h560v-240h-80v-80h160v720ZM480-480Zm0 80v-80 80Zm0 0Zm-40-240v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z" />
+      </svg>
+      Add chromosome before
+    </div>
+    <div class="right-menu-choice" id="add-after-chr">
+      <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+        fill="#1f1f1f">
+        <path
+          d="M200-560h560v-240H200v240Zm-80 400v-720h720v720H680v-80h80v-240H200v240h80v80H120Zm360-320Zm0-80v80-80Zm0 0ZM440-80v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z" />
+      </svg>
+      Add chromosome after
+    </div>
+    <div class="right-menu-choice" id="remove-chr">
+      <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+        fill="#1f1f1f">
+        <path
+          d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z" />
+      </svg>
+      Remove chromosome
+    </div>
+  </div>
+
+  <dialog id="about-dialog" aria-labelledby="dialog-title" closedby="any">
+    <button class="close-button" aria-label="Close">×</button>
+
+    <h2 id="dialog-title">About Chromo Viz</h2>
+    <p>
+      Chromo Viz helps you visualize your chromosome sequences.
+    </p>
+    <p>
+      Version: 1.2.1 (nov. 2026)
+    </p>
+    <p>
+      🤔 Found a bug?
+      <a href="https://github.com/tblondelle/chromo_viz/issues" target="_blank" rel="noopener noreferrer">Open an
+        issue on GitHub</a>
+    </p>
+    <p>
+      🥰 Want to show your support?
+      <a href="https://github.com/tblondelle/chromo_viz" target="_blank" rel="noopener noreferrer">Star the
+        repository</a>
+    </p>
+  </dialog>
+
+  <input id="color-picker" type="color" hidden>
+
+  <script src="src/server/static/page.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script src="src/server/static/main.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs/dist/pptxgen.bundle.js"></script>
