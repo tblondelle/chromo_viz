@@ -24,9 +24,9 @@
       </div>
     </div>
     <div class="header-right">
-      <button id="header-button-file" class="header-button">File</button>
-      <button id="header-button-layout" class="header-button is-on">Layout</button>
-      <button id="about" class="header-button">About</button>
+      <button id="header-button-file" class="header-button" style="width: 70px">File</button>
+      <button id="header-button-layout" class="header-button is-on" style="width: 90px">Layout</button>
+      <button id="about" class="header-button" style="width: 80px">About</button>
     </div>
   </header>
 
@@ -34,94 +34,109 @@
 
     <div class="settings-menu transparent" id="settings-menu-file">
 
-      <button id="load-csv" class="setting" type="button" aria-label="Load CSV">
-        <input id="csv-file" type="file" accept=".csv,text/csv" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">
-          <path
-            d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
-        </svg>
-        <h1>Open new CSV</h1>
-      </button>
+      <div class="vertical-separator"></div>
 
-      <button id="export-csv" class="setting" type="button" aria-label="Download CSV">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black">
-          <path
-            d="M18,21l4-4l-1.4-1.4L19,17.2V13.02H17V17.2l-1.6-1.6L14,17l4,4Zm-4,3V22h8v2H14ZM6,20q-0.82,0-1.41-0.59T4,18V4Q4,3.17 4.59,2.59T6,2h7l6,6v3.02H17V9H12V4H6V18h6v2H6Zm0-2V11.02V9V4V18Z" />
-        </svg>
-        <h1>Save as CSV</h1>
-      </button>
+      <div class="setting-subsection">
+        <div class="setting-subsection-title">Load</div>
+        <div class="setting-subsection-action">
+          <button id="load-csv" class="setting" type="button" aria-label="Load CSV">
+            <input id="csv-file" type="file" accept=".csv,text/csv" hidden>
+            <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black"><path d="M5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H8.33V15.68H5V19Zm5.33,0h3.35V15.68H10.33V19Zm5.35,0H19V15.68H15.68V19ZM5,13.68H8.33V10.33H5v3.35Zm5.33,0h3.35V10.33H10.33v3.35Zm5.35,0H19V10.33H15.68v3.35ZM5,8.32H8.33V5H5V8.32Zm5.33,0h3.35V5H10.33V8.32Zm5.35,0H19V5H15.68V8.32Z"/></svg>
+              CSV</h1>
+          </button>
+        </div>
+      </div>
 
-      <button id="export-svg" class="setting" type="button">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f">
-          <path
-            d="M12,12ZM5.05,22.38l-1.4-1.43L6.6,18H4.35V16H10v5.65H8V19.43L5.05,22.38ZM12,22V20h6V9H13V4H6V14H4V4Q4,3.17 4.59,2.59T6,2h8l6,6V20q0,0.82-0.59,1.41T18,22H12Z" />
-        </svg>
-        <h1>Export as SVG</h1>
-      </button>
+      <div class="vertical-separator"></div>
 
-      <button id="export-ppt" class="setting" type="button">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f">
-          <path
-            d="M12,12ZM5.05,22.38l-1.4-1.43L6.6,18H4.35V16H10v5.65H8V19.43L5.05,22.38ZM12,22V20h6V9H13V4H6V14H4V4Q4,3.17 4.59,2.59T6,2h8l6,6V20q0,0.82-0.59,1.41T18,22H12Z" />
-        </svg>
-        <h1>Export as PowerPoint</h1>
-      </button>
+      <div class="setting-subsection">
+        <div class="setting-subsection-title">Download</div>
+        <div class="setting-subsection-action">
+          <button id="export-csv" class="setting" type="button" aria-label="Download CSV">
+            <h1>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black"><path d="M5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H8.33V15.68H5V19Zm5.33,0h3.35V15.68H10.33V19Zm5.35,0H19V15.68H15.68V19ZM5,13.68H8.33V10.33H5v3.35Zm5.33,0h3.35V10.33H10.33v3.35Zm5.35,0H19V10.33H15.68v3.35ZM5,8.32H8.33V5H5V8.32Zm5.33,0h3.35V5H10.33V8.32Zm5.35,0H19V5H15.68V8.32Z"/></svg>
+              CSV</h1>
+          </button>
+
+          <button id="export-svg" class="setting" type="button">
+            <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black">
+                <path
+                  d="M5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H19V5H5V19Zm1-2H18l-3.75-5l-3,4L9,13L6,17ZM5,19V5V19Z" />
+              </svg>
+              SVG</h1>
+          </button>
+
+          <button id="export-ppt" class="setting" type="button">
+            <h1>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black">
+                <path
+                  d="M9.5,16.5l7-4.5l-7-4.5v9ZM5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H19V5H5V19ZM5,5V19V5Z" />
+              </svg>
+              PowerPoint</h1>
+          </button>
+        </div>
+      </div>
+
+      <div class="vertical-separator"></div>
+
     </div>
 
     <div class="settings-menu" id="settings-menu-layout">
+      <div class="vertical-separator"></div>
 
-      <label class="setting">
-        <h1>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f">
-            <g transform="rotate(90 480 -480)">
-              <path
-                d="M280-280 80-480l200-200 56 56-103 104h494L624-624l56-56 200 200-200 200-56-56 103-104H233l103 104-56 56Z" />
-            </g>
-          </svg>
-          Vertical spacing
-        </h1>
-        <input id="row-gap" type="range" min="0" max="5" value="2" step="0.05">
-        <div class="layout-value">
-          <span id="row-gap-value">__</span>
-          <span>eq.chromosomes</span>
+      <div class="setting-subsection">
+        <div class="setting-subsection-title">Vertical</div>
+        <div class="setting-subsection-action">
+          <label class="setting">
+            <h1>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black"><path d="M2,22V20H22v2H2Zm5-8.5v-3H17v3H7ZM2,4V2H22V4H2Z"/></svg>
+              </svg>
+              Vertical spacing
+            </h1>
+            <input id="row-gap" type="range" min="0" max="5" value="2" step="0.05">
+            <div class="layout-value">
+              <span id="row-gap-value">__</span>
+              <span>eq.chromosomes</span>
+            </div>
+          </label>
+          <label class="setting">
+            <h1>
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                fill="#1f1f1f">
+                <path
+                  d="M160-80v-80h640v80H160Zm320-120L320-360l56-56 64 62v-252l-64 62-56-56 160-160 160 160-56 56-64-62v252l64-62 56 56-160 160ZM160-800v-80h640v80H160Z" />
+              </svg>
+              Chromosome height
+            </h1>
+            <input id="bar-height" type="range" min="1" max="40" value="14" step="0.05">
+            <div class="layout-value">
+              <span id="height-value">14</span>
+              <span>arb. unit</span>
+            </div>
+          </label>
         </div>
-      </label>
-      <br>
+      </div>
 
+      <div class="vertical-separator"></div>
 
-
-      <label class="setting">
-        <h1>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f">
-            <path
-              d="M160-80v-80h640v80H160Zm320-120L320-360l56-56 64 62v-252l-64 62-56-56 160-160 160 160-56 56-64-62v252l64-62 56 56-160 160ZM160-800v-80h640v80H160Z" />
-          </svg>
-          Chromosome height
-        </h1>
-        <input id="bar-height" type="range" min="1" max="40" value="14" step="0.05">
-        <div class="layout-value">
-          <span id="height-value">14</span>
-          <span>arb. unit</span>
+      <div class="setting-subsection">
+        <div class="setting-subsection-title">Horizontal</div>
+        <div class="setting-subsection-action">
+          <label class="setting">
+            <h1>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black"><path d="M2,22V2H4V22H2Zm8.5-5V7h3V17h-3ZM20,22V2h2V22H20Z"/></svg>
+              Inter-sequence gap
+            </h1>
+            <input id="gap" type="range" min="0" max="100" value="1" step="0.05">
+            <div class="layout-value">
+              <span id="gap-value">1</span>
+              <span>bp</span>
+            </div>
+          </label>
         </div>
-      </label>
+      </div>
 
-      <br>
-
-      <label class="setting">
-        <h1>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f">
-            <path
-              d="M280-280 80-480l200-200 56 56-103 104h494L624-624l56-56 200 200-200 200-56-56 103-104H233l103 104-56 56Z" />
-          </svg>
-          Horizontal gap
-        </h1>
-        <input id="gap" type="range" min="0" max="100" value="1" step="0.05">
-        <div class="layout-value">
-          <span id="gap-value">1</span>
-          <span>bp</span>
-        </div>
-      </label>
-
+      <div class="vertical-separator"></div>
     </div>
 
   </div>
@@ -137,7 +152,7 @@
         <path
           d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
       </svg>
-      <span>Edit value</span>
+      <span>Edit size</span>
     </div>
     <div class="right-menu-choice" id="edit-color">
       <svg class='icon' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
