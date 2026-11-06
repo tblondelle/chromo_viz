@@ -28,6 +28,23 @@
       <button id="header-button-layout" class="header-button is-on" style="width: 90px">Layout</button>
       <button id="about" class="header-button" style="width: 80px">About</button>
     </div>
+    <div class="data-buttons">
+
+      <button class="undo-button" type="button" aria-label="Undo" title="Shortcut: Ctrl-Z" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f">
+          <path
+            d="M7,19V17h7.1q1.57,0 2.74-1T18,13.5T16.84,11T14.1,10H7.8l2.6,2.6L9,14L4,9L9,4l1.4,1.4L7.8,8h6.3q2.43,0 4.16,1.57T20,13.5t-1.74,3.93Q16.53,19 14.1,19H7Z" />
+        </svg>
+        Undo
+      </button>
+      <button class="redo-button" type="button" aria-label="Redo" title="Shortcut: Ctrl-Y" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f">
+          <path
+            d="M9.9,19q-2.42,0-4.16-1.57T4,13.5T5.74,9.57T9.9,8h6.3L13.6,5.4L15,4l5,5l-5,5l-1.4-1.4L16.2,10H9.9q-1.57,0-2.74,1T6,13.5T7.16,16T9.9,17H17v2H9.9Z" />
+        </svg>
+        Redo
+      </button>
+    </div>
   </header>
 
   <div id="setting-panel" class="settings">
@@ -39,9 +56,20 @@
       <div class="setting-subsection">
         <div class="setting-subsection-title">Load</div>
         <div class="setting-subsection-action">
+          <button id="load-initial" class="setting reset-button" type="button" aria-label="Undo">
+            <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black">
+                <path
+                  d="M11,20.95q-3.02-0.38-5.01-2.64T4,13q0-1.65 0.65-3.16T6.5,7.2L7.93,8.63Q6.98,9.48 6.49,10.6T6,13q0,2.2 1.4,3.89T11,18.95v2Zm2,0v-2q2.18-0.4 3.59-2.07T18,13q0-2.5-1.75-4.25T12,7H11.93l1.1,1.1l-1.4,1.4L8.13,6l3.5-3.5l1.4,1.4L11.93,5H12q3.35,0 5.68,2.32T20,13q0,3.02-1.99,5.29Q16.03,20.55 13,20.95Z" />
+              </svg>
+              Initial figure</h1>
+          </button>
+
           <button id="load-csv" class="setting" type="button" aria-label="Load CSV">
             <input id="csv-file" type="file" accept=".csv,text/csv" hidden>
-            <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black"><path d="M5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H8.33V15.68H5V19Zm5.33,0h3.35V15.68H10.33V19Zm5.35,0H19V15.68H15.68V19ZM5,13.68H8.33V10.33H5v3.35Zm5.33,0h3.35V10.33H10.33v3.35Zm5.35,0H19V10.33H15.68v3.35ZM5,8.32H8.33V5H5V8.32Zm5.33,0h3.35V5H10.33V8.32Zm5.35,0H19V5H15.68V8.32Z"/></svg>
+            <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black">
+                <path
+                  d="M5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H8.33V15.68H5V19Zm5.33,0h3.35V15.68H10.33V19Zm5.35,0H19V15.68H15.68V19ZM5,13.68H8.33V10.33H5v3.35Zm5.33,0h3.35V10.33H10.33v3.35Zm5.35,0H19V10.33H15.68v3.35ZM5,8.32H8.33V5H5V8.32Zm5.33,0h3.35V5H10.33V8.32Zm5.35,0H19V5H15.68V8.32Z" />
+              </svg>
               CSV</h1>
           </button>
         </div>
@@ -54,8 +82,12 @@
         <div class="setting-subsection-action">
           <button id="export-csv" class="setting" type="button" aria-label="Download CSV">
             <h1>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black"><path d="M5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H8.33V15.68H5V19Zm5.33,0h3.35V15.68H10.33V19Zm5.35,0H19V15.68H15.68V19ZM5,13.68H8.33V10.33H5v3.35Zm5.33,0h3.35V10.33H10.33v3.35Zm5.35,0H19V10.33H15.68v3.35ZM5,8.32H8.33V5H5V8.32Zm5.33,0h3.35V5H10.33V8.32Zm5.35,0H19V5H15.68V8.32Z"/></svg>
-              CSV</h1>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black">
+                <path
+                  d="M5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H8.33V15.68H5V19Zm5.33,0h3.35V15.68H10.33V19Zm5.35,0H19V15.68H15.68V19ZM5,13.68H8.33V10.33H5v3.35Zm5.33,0h3.35V10.33H10.33v3.35Zm5.35,0H19V10.33H15.68v3.35ZM5,8.32H8.33V5H5V8.32Zm5.33,0h3.35V5H10.33V8.32Zm5.35,0H19V5H15.68V8.32Z" />
+              </svg>
+              CSV
+            </h1>
           </button>
 
           <button id="export-svg" class="setting" type="button">
@@ -72,7 +104,8 @@
                 <path
                   d="M9.5,16.5l7-4.5l-7-4.5v9ZM5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H19V5H5V19ZM5,5V19V5Z" />
               </svg>
-              PowerPoint</h1>
+              PowerPoint
+            </h1>
           </button>
         </div>
       </div>
@@ -89,7 +122,9 @@
         <div class="setting-subsection-action">
           <label class="setting">
             <h1>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black"><path d="M2,22V20H22v2H2Zm5-8.5v-3H17v3H7ZM2,4V2H22V4H2Z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black">
+                <path d="M2,22V20H22v2H2Zm5-8.5v-3H17v3H7ZM2,4V2H22V4H2Z" />
+              </svg>
               </svg>
               Vertical spacing
             </h1>
@@ -124,7 +159,9 @@
         <div class="setting-subsection-action">
           <label class="setting">
             <h1>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black"><path d="M2,22V2H4V22H2Zm8.5-5V7h3V17h-3ZM20,22V2h2V22H20Z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="black">
+                <path d="M2,22V2H4V22H2Zm8.5-5V7h3V17h-3ZM20,22V2h2V22H20Z" />
+              </svg>
               Inter-sequence gap
             </h1>
             <input id="gap" type="range" min="0" max="100" value="1" step="0.05">
@@ -222,7 +259,7 @@
       Chromo Viz helps you visualize your chromosome sequences.
     </p>
     <p>
-      Version: 1.2.1 (nov. 2026)
+      Version: 2.1.0 (nov. 2026)
     </p>
     <p>
       🤔 Found a bug?

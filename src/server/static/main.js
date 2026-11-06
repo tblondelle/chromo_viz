@@ -3,6 +3,8 @@ const labelWidth = 30;
 const labelMargin = 10;
 const topMargin = 3;
 
+let data_state = []
+let state_position = 0;
 let data = [];
 let selectedBlock = null;
 let nextBlockId = 0
@@ -14,6 +16,42 @@ const fileInput = document.querySelector("#csv-file");
 const gapInput = document.querySelector("#gap");
 const heightInput = document.querySelector("#bar-height");
 const rowGapInput = document.querySelector("#row-gap");
+
+function save(new_data_state) {
+    // If trying to save the same state, don't.
+    if (data_state.length >= 1) {
+        if (data_state[state_position].length === new_data_state.length &&
+            data_state[state_position].every((item, i) =>
+                data_state[state_position][i].row_nb === new_data_state[i].row_nb &&
+                data_state[state_position][i].seq_nb === new_data_state[i].seq_nb &&
+                data_state[state_position][i].color === new_data_state[i].color &&
+                data_state[state_position][i].size === new_data_state[i].size
+            )) {
+            return
+        }
+    }
+
+    data_state.splice(state_position + 1, data_state.length - state_position, structuredClone(new_data_state));
+
+    state_position = data_state.length - 1
+
+    if (state_position == 0) {
+        document.querySelector(".undo-button").disabled = true;
+    }
+    else {
+        document.querySelector(".undo-button").disabled = false;
+    }
+    if (state_position == data_state.length - 1) {
+        document.querySelector(".redo-button").disabled = true;
+    }
+    else {
+        document.querySelector(".redo-button").disabled = false;
+    }
+}
+
+function load(position) {
+    data = structuredClone(data_state[position]);
+}
 
 
 function draw(withAnimation = true) {
@@ -97,9 +135,6 @@ function draw(withAnimation = true) {
                 .attr("dy", "0.35em")
                 .text(d => `${d.total}bp`),
             exit => exit
-                .transition()
-                .duration(withAnimation ? 200 : 20)
-                .attr("x", width)
                 .remove()
         );
 
@@ -182,6 +217,7 @@ function draw(withAnimation = true) {
         );
 }
 
+
 function loadCsvText(text) {
 
     const header = text.split(/\r?\n/).find(line => line.trim() !== "") ?? "";
@@ -243,6 +279,7 @@ function loadCsvText(text) {
     });
 
     draw();
+    save(data);
 }
 
 
@@ -346,6 +383,7 @@ heightInput.addEventListener("input", () => draw(false));
 
 rowGapInput.addEventListener("input", () => draw(false));
 
+
 // Menus
 document.addEventListener("click", event => {
     if (
@@ -354,6 +392,13 @@ document.addEventListener("click", event => {
     ) {
         rightMenu.hidden = true;
     }
+});
+
+colorPicker.addEventListener("input", () => {
+    if (!selectedBlock) return;
+
+    selectedBlock.color = colorPicker.value;
+    draw(false);
 });
 
 document.querySelector("#edit-color").addEventListener("click", () => {
@@ -365,6 +410,7 @@ document.querySelector("#edit-color").addEventListener("click", () => {
 
     rightMenu.hidden = true;
     colorPicker.click();
+    save(data);
 });
 
 document.querySelector("#edit-size").addEventListener("click", () => {
@@ -382,6 +428,7 @@ document.querySelector("#edit-size").addEventListener("click", () => {
     selectedBlock.size = size;
     draw();
     rightMenu.hidden = true;
+    save(data);
 });
 
 document.querySelector("#remove-seq").addEventListener("click", () => {
@@ -420,6 +467,7 @@ document.querySelector("#remove-seq").addEventListener("click", () => {
 
     draw();
     rightMenu.hidden = true;
+    save(data);
 });
 
 document.querySelector("#add-before").addEventListener("click", () => {
@@ -459,6 +507,7 @@ document.querySelector("#add-before").addEventListener("click", () => {
 
     draw();
     rightMenu.hidden = true;
+    save(data);
 });
 
 document.querySelector("#add-after").addEventListener("click", () => {
@@ -498,6 +547,7 @@ document.querySelector("#add-after").addEventListener("click", () => {
 
     draw();
     rightMenu.hidden = true;
+    save(data);
 });
 
 document.querySelector("#remove-chr").addEventListener("click", () => {
@@ -523,6 +573,7 @@ document.querySelector("#remove-chr").addEventListener("click", () => {
     selectedBlock = null;
     draw();
     rightMenu.hidden = true;
+    save(data);
 });
 
 document.querySelector("#add-before-chr").addEventListener("click", () => {
@@ -551,6 +602,7 @@ document.querySelector("#add-before-chr").addEventListener("click", () => {
     selectedBlock = null;
     draw();
     rightMenu.hidden = true;
+    save(data);
 });
 
 document.querySelector("#add-after-chr").addEventListener("click", () => {
@@ -578,12 +630,72 @@ document.querySelector("#add-after-chr").addEventListener("click", () => {
     selectedBlock = null;
     draw();
     rightMenu.hidden = true;
+    save(data);
+});
+
+document.querySelector(".reset-button").addEventListener("click", () => {
+    load(0);
+    draw();
+    save(data_state[0])
+})
+
+function undo() {
+    state_position--;
+    load(state_position);
+    console.log(data)
+    draw();
+
+    if (state_position == 0) {
+        document.querySelector(".undo-button").disabled = true;
+    }
+    if (state_position < data_state.length - 1) {
+        document.querySelector(".redo-button").disabled = false;
+    }
+}
+
+function redo() {
+    state_position++
+    load(state_position);
+    draw();
+
+    if (state_position == data_state.length - 1) {
+        document.querySelector(".redo-button").disabled = true;
+    }
+    if (state_position > 0) {
+        document.querySelector(".undo-button").disabled = false;
+    }
+}
+
+document.querySelector(".undo-button").addEventListener("click", () => undo())
+
+document.querySelector(".redo-button").addEventListener("click", () => redo())
+
+
+document.addEventListener("keydown", (event) => {
+    // Ctrl+Z on Windows/Linux, Cmd+Z on Mac
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
+        // Let text fields handle their own undo
+        if (event.target.matches("input, textarea, [contenteditable='true']")) return;
+
+        event.preventDefault();
+
+        if (state_position != 0) {
+            undo();
+        }
+    }
 });
 
 
-colorPicker.addEventListener("input", () => {
-    if (!selectedBlock) return;
+document.addEventListener("keydown", (event) => {
+    // Ctrl+Z on Windows/Linux, Cmd+Z on Mac
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "y") {
+        // Let text fields handle their own undo
+        if (event.target.matches("input, textarea, [contenteditable='true']")) return;
 
-    selectedBlock.color = colorPicker.value;
-    draw(false);
+        event.preventDefault();
+
+        if (state_position != data_state.length - 1) {
+            redo();
+        }
+    }
 });

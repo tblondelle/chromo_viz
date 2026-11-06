@@ -123,6 +123,34 @@ header p {
   filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.589));
 }
 
+.data-buttons {
+  display: flex;
+  justify-content: right;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.data-buttons button {
+  background-color: white;
+  padding: 5px 5px 5px 5px;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.data-buttons button:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.data-buttons button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+
 .settings {
   background-color: white;
   transition: transform 200ms ease, height 200ms ease;
@@ -153,9 +181,6 @@ header p {
 
 .setting-subsection-title {
   margin: 5px;
-  padding-left: 10px;
-  /* font-size: small; */
-  /* font-style: italic; */
   color:rgb(124, 124, 124);
   display: flex;
   justify-content: center;
