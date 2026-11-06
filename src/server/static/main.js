@@ -398,7 +398,9 @@ colorPicker.addEventListener("input", () => {
     if (!selectedBlock) return;
 
     selectedBlock.color = colorPicker.value;
+
     draw(false);
+    save(data);
 });
 
 document.querySelector("#edit-color").addEventListener("click", () => {
