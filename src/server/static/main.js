@@ -283,17 +283,17 @@ function loadCsvText(text) {
 }
 
 
-// Initial load
-fetch("src/server/static/data.csv")
-    .then(response => {
-        if (!response.ok) throw new Error(`Erreur HTTP : ${response.status}`);
-        return response.text();
-    })
-    .then(loadCsvText)
-    .catch(error => {
-        console.error("Impossible to load CSV file:", error);
-        alert("The default CSV file could not be loaded.\n" + error);
-    });
+    // Initial load
+    fetch("src/server/static/data.csv")
+        .then(response => {
+            if (!response.ok) throw new Error(`Erreur HTTP : ${response.status}`);
+            return response.text();
+        })
+        .then(loadCsvText)
+        .catch(error => {
+            console.error("Impossible to load CSV file:", error);
+            alert("The default CSV file could not be loaded.\n" + error);
+        });
 
 
 // Listeners
@@ -400,6 +400,9 @@ colorPicker.addEventListener("input", () => {
     selectedBlock.color = colorPicker.value;
 
     draw(false);
+});
+
+colorPicker.addEventListener("change", () => {
     save(data);
 });
 
@@ -412,7 +415,6 @@ document.querySelector("#edit-color").addEventListener("click", () => {
 
     rightMenu.hidden = true;
     colorPicker.click();
-    save(data);
 });
 
 document.querySelector("#edit-size").addEventListener("click", () => {
@@ -644,7 +646,6 @@ document.querySelector(".reset-button").addEventListener("click", () => {
 function undo() {
     state_position--;
     load(state_position);
-    console.log(data)
     draw();
 
     if (state_position == 0) {
